@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import br.com.kpc.locbus.adapter.OnibusAdapter;
 import br.com.kpc.locbus.core.Onibus;
+import br.com.kpc.locbus.util.ConexaoServidor;
 
 public class OnibusActivity extends Activity {
 
@@ -120,7 +121,7 @@ public class OnibusActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-
+			
 			// Animação enquando executa o web service
 			progressDialog = ProgressDialog.show(OnibusActivity.this, "Aguarde",
 					"processando...");
@@ -128,7 +129,8 @@ public class OnibusActivity extends Activity {
 
 		@Override
 		protected String doInBackground(Void... params) {
-			return executarWebService();
+			//Passando link como parametro. getLink da class ConexãoServidor
+			return executarWebService(ConexaoServidor.getConexaoServidor().getLinkOnibus());
 		}
 
 		@Override
@@ -153,11 +155,12 @@ public class OnibusActivity extends Activity {
 		}
 
 		//Executando o webservice para buscar informações no banco de dados.
-		private String executarWebService() {
+		private String executarWebService(String linkOnibus) {
 			String result = null;
 
-			result = getRESTFileContent("http://10.0.2.2:8080/locBus/rest/veiculos/buscaPorLinha/"
-					+ edtNumeroLinha.getText());
+
+			
+			result = getRESTFileContent( linkOnibus + edtNumeroLinha.getText());
 
 			if (result == null) {
 				Log.e("Onibus", "Falha ao acessar WS");
