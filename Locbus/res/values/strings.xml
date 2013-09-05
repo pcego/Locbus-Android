@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LocBus</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- Layout Principal -->
+    <string name="menu_onibus">Ônibus</string>
+    <string name="title_activity_onibus">Ônibus</string>
+
+    <!-- Layout Ônibus -->
+    <string name="btn_buscar">Ok</string>
+    
+    
+</resources>
