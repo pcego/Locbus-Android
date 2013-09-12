@@ -7,10 +7,13 @@
 
     <!-- Layout Principal -->
     <string name="menu_onibus">Ônibus</string>
+    <string name="menu_mapa">Mapa</string>
     <string name="title_activity_onibus">Ônibus</string>
 
     <!-- Layout Ônibus -->
     <string name="btn_buscar">Ok</string>
-    
-    
+    <string name="title_activity_onibus_infor_activyty">Informações sobre o Ônibus</string>
+    <string name="title_activity_mapa">Mapa</string>
+    <string name="title_activity_mapa_buscar">O que você deseja buscar?</string>
+
 </resources>

@@ -25,4 +25,9 @@ public class Principal extends Activity {
 		Intent i = new Intent(getApplicationContext(), OnibusActivity.class);
 		startActivity(i);
 	}
+	public void btnMapa(View v) {
+		Intent i = new Intent(getApplicationContext(), MapaActivity.class);
+		startActivity(i);
+	}
+
 }

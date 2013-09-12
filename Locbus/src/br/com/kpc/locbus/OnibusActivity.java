@@ -3,6 +3,7 @@ package br.com.kpc.locbus;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,6 +62,19 @@ public class OnibusActivity extends Activity {
 				Toast.makeText(OnibusActivity.this,
 						"Selecionado :" + " " + onibus.getDescricao(), Toast.LENGTH_SHORT)
 						.show();
+
+				//Passando Ônibus selecionado para Activity OnibusInfor
+				Bundle bundle = new Bundle();
+				bundle.putString("idOnibus", Integer.toString(onibus.get_id()) );
+				//Chamando a proxima tela
+				Intent i = new Intent(getApplicationContext(), OnibusInforActivyty.class);
+				//Passando o Budle com o valor do id do onibus.
+				i.putExtras(bundle);
+				startActivity(i);
+				//Finalizando a tela.
+				finish();
+				
+				
 			}
 
 		});
@@ -202,7 +217,7 @@ public class OnibusActivity extends Activity {
 
 						onibus = new Onibus();
 						//newsData.set_id(Integer.parseInt(dadosJson.getString("id"))) ;
-						onibus.set_id(1) ;
+						onibus.set_id(dadosJson.getInt("id")) ;
 						onibus.setDescricao(dadosJson
 								.getString("descricao"));
 						onibus.setEmpresa_id(1);
