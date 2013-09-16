@@ -58,8 +58,13 @@
         </activity>
         <activity
             android:name="br.com.kpc.locbus.MapaBuscarActivity"
-            android:label="@string/title_activity_mapa_buscar" 
+            android:label="@string/title_activity_mapa_buscar"
             android:theme="@android:style/Theme.Holo.Dialog" >
+        </activity>
+        <activity
+            android:name="br.com.kpc.locbus.MapaConsultarLinha"
+            android:label="@string/title_activity_mapa_consultar_linha" 
+            android:theme="@android:style/Theme.Holo.Dialog">
         </activity>
     </application>
 

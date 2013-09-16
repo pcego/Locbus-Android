@@ -29,7 +29,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import br.com.kpc.locbus.core.Onibus;
 import br.com.kpc.locbus.core.Parada;
+import br.com.kpc.locbus.core.Posicao;
 import br.com.kpc.locbus.util.ConexaoServidor;
 import br.com.kpc.locbus.util.InformacaoMaps;
 import br.com.kpc.locbus.util.Mensagens;
@@ -66,8 +68,9 @@ public class MapaActivity extends Activity implements LocationListener {
 	protected void onPause() {
 		super.onPause();
 		// Desliga GPS //Testado - Funcionando
-//		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//		locationManager.removeUpdates(this);
+		// LocationManager locationManager = (LocationManager)
+		// getSystemService(Context.LOCATION_SERVICE);
+		// locationManager.removeUpdates(this);
 	}
 
 	@Override
@@ -108,7 +111,7 @@ public class MapaActivity extends Activity implements LocationListener {
 
 		// RECUPERAR INFORMAÇÃO DA TELA DE BUSCA MAPAS, QUE VAI DAR O RETORNO O
 		// QUE O
-		// USUARIO QUER FAZER
+		// USUARIO QUER FAZER-
 
 		startActivityForResult(new Intent(this, MapaBuscarActivity.class),
 				RETORNO_MENU);
@@ -167,15 +170,17 @@ public class MapaActivity extends Activity implements LocationListener {
 			// 1 - Onibus de determinada linha;
 			if (resultado == 1) {
 				Toast.makeText(this, "SIM", Toast.LENGTH_SHORT).show();
-				adicionarMarcador(latLng);
+				//adicionarMarcador(latLng);
 				// Limpamdo o array lsita de dados
 
-				// Chama o WebService em um AsyncTask
-				new TarefaWS().execute();
+				
 
 			}// 2 - Parada de Onibus mais proxima;
 			else if (resultado == 2) {
 				Toast.makeText(this, "NAO", Toast.LENGTH_SHORT).show();
+				// Chama o WebService em um AsyncTask
+				new TarefaWS().execute();
+
 			}
 
 		}
@@ -186,18 +191,18 @@ public class MapaActivity extends Activity implements LocationListener {
 	public void adicionarMarcador(LatLng latLng) {
 		map.clear();
 
-		// // Cria um marcador
+		// // Cria um marcador LOCAL ONDE ESTA
 		Marker frameworkSystem = map.addMarker(new MarkerOptions()
 				.position(latLng)
 				.title("Ônibus 1222")
 				.icon(BitmapDescriptorFactory
 						.fromResource(R.drawable.icon_locacao)));
 		// Move a câmera para Framework System com zoom 15.
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
 
 	}
 
-	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA WEB SERVICE XXXXXXXXXXXXXXXXXXXXX
+	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( PARADAS )  WEB SERVICE XXXXXXXXXXXXXXXXXXXXX
 
 	// Declaração de Variaveis Global da Class
 	private ProgressDialog progressDialog;
@@ -211,8 +216,6 @@ public class MapaActivity extends Activity implements LocationListener {
 	// // Botão de carregar os dados
 	// public void btnWSClick() {
 	//
-	// // Limpamdo o array lsita de dados
-	// arrayDados.clear();
 	//
 	// // Chama o WebService em um AsyncTask
 	// new TarefaWS().execute();
@@ -267,6 +270,9 @@ public class MapaActivity extends Activity implements LocationListener {
 		protected void onPreExecute() {
 			super.onPreExecute();
 
+			 // Limpamdo o array lsita de dados
+			 arrayDados.clear();
+			
 			// Animação enquando executa o web service
 			progressDialog = ProgressDialog.show(MapaActivity.this, "Aguarde",
 					"processando...");
@@ -302,20 +308,16 @@ public class MapaActivity extends Activity implements LocationListener {
 			while (it.hasNext()) {
 				Parada p = it.next();
 
-				Toast.makeText(MapaActivity.this,
-						"Iahahah! " + p.getLatitude().toString() ,
-						Toast.LENGTH_SHORT).show();
-				
 				l = new LatLng(Double.parseDouble(p.getLatitude()),
 						Double.parseDouble(p.getLongitude()));
 				// // Cria um marcador
 				Marker frameworkSystem = map.addMarker(new MarkerOptions()
 						.position(l)
-						.title(p.getDescricao())
+						.title(p.get_id() + " - "+ p.getDescricao())
 						.icon(BitmapDescriptorFactory
 								.fromResource(R.drawable.icon_locacao)));
 				// Move a câmera para Framework System com zoom 15.
-			//	map.moveCamera(CameraUpdateFactory.newLatLngZoom(l, 17));
+				// map.moveCamera(CameraUpdateFactory.newLatLngZoom(l, 17));
 
 			}
 
@@ -359,15 +361,14 @@ public class MapaActivity extends Activity implements LocationListener {
 						parada = new Parada();
 						// newsData.set_id(Integer.parseInt(dadosJson.getString("id")))
 						// ;
-						// parada.set_id(dadosJson.getInt("id"));
+						parada.set_id(dadosJson.getInt("id"));
 						parada.setDescricao(dadosJson.getString("descricao"));
 						parada.setLatitude(dadosJson.getString("latitude"));
 						parada.setLongitude(dadosJson.getString("longitude"));
 						// parada.setStatus(Boolean.parseBoolean("status"));
 
 						arrayDados.add(parada);
-				
-						
+
 					}
 				}
 				return sb.toString();
@@ -379,6 +380,132 @@ public class MapaActivity extends Activity implements LocationListener {
 		}
 	}
 
-	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA WEB SERVICE XXXXXXXXXXXXXXXXXXXXX
+	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( PARADAS )WEB SERVICE XXXXXXXXXXXXXXXXXXXXX
+	
+	
+	
+	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( ONIBUS ) WEB SERVICE XXXXXXXXXXXXXXXXXXXXX
+
+	Posicao posicao;
+
+
+	// Tarefa assincrona para realizar requisição e tratar retorno
+	class OnibusWS extends AsyncTask<Void, Void, String> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+
+			 // Limpamdo o array lsita de dados
+			 arrayDados.clear();
+			
+			// Animação enquando executa o web service
+			progressDialog = ProgressDialog.show(MapaActivity.this, "Aguarde",
+					"processando...");
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+			// Passando link como parametro. getLink da class ConexãoServidor
+			return executarWebService(ConexaoServidor.getConexaoServidor()
+					.getLinkOnibus()+ "122");
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			if (arrayDados.isEmpty()) {
+				Toast.makeText(MapaActivity.this,
+						"Nenhum registro encontrado!", Toast.LENGTH_SHORT)
+						.show();
+			} else {
+				Toast.makeText(MapaActivity.this,
+						"Informações carregada com sucesso!",
+						Toast.LENGTH_SHORT).show();
+			}
+
+			progressDialog.dismiss();
+
+			// // Enviando os dados para o ListView (Atualizando a tela)
+			// listView.setAdapter(new OnibusAdapter(Paradas.this,
+			// arrayDados));
+			LatLng latLngTemp;
+			Iterator<Posicao> it = arrayDados.iterator();
+			while (it.hasNext()) {
+				Posicao p = it.next();
+
+				latLngTemp = new LatLng(Double.parseDouble(p.getLatitude()),
+						Double.parseDouble(p.getLongitude()));
+				// // Cria um marcador
+				Marker frameworkSystem = map.addMarker(new MarkerOptions()
+						.position(latLngTemp)
+						.title(p.get_id() + " - "+ p.get_id())
+						.icon(BitmapDescriptorFactory
+								.fromResource(R.drawable.icon_locacao)));
+				// Move a câmera para Framework System com zoom 15.
+				// map.moveCamera(CameraUpdateFactory.newLatLngZoom(l, 17));
+
+			}
+
+		}
+
+		// Executando o webservice para buscar informações no banco de dados.
+		private String executarWebService(String linkOnibus) {
+			String result = null;
+
+			result = getRESTFileContent(linkOnibus);
+
+			if (result == null) {
+				Log.e("Paradas", "Falha ao acessar WS");
+				Toast.makeText(getApplicationContext(),
+						"Paradas Falha ao acessar WS", Toast.LENGTH_SHORT)
+						.show();
+				return null;
+			}
+
+			try {
+				JSONObject json = new JSONObject(result);
+				StringBuffer sb = new StringBuffer();
+				JSONArray dadosArray = json.getJSONArray("parada");
+				JSONObject dadosJson;
+
+				// Se tem apenas um registro no banco
+				if (dadosArray.length() == 1) {
+					// for (int i = 0; i < pessoasArray.length(); i++) {
+					// pessoaJson = new JSONObject(pessoasArray.getString(i));
+					// sb.append("id=" + json.getLong("id"));
+					// sb.append("|descricao=" + json.getString("descricao"));
+					// sb.append('\n');
+					// Log.d("TesteWs", sb.toString());
+				}
+				// se tem mais de um registro no banco cria um array
+				else if (dadosArray.length() > 1) {
+
+					for (int i = 0; i < dadosArray.length(); i++) {
+						dadosJson = new JSONObject(dadosArray.getString(i));
+
+						parada = new Parada();
+						// newsData.set_id(Integer.parseInt(dadosJson.getString("id")))
+						// ;
+						parada.set_id(dadosJson.getInt("id"));
+						parada.setDescricao(dadosJson.getString("descricao"));
+						parada.setLatitude(dadosJson.getString("latitude"));
+						parada.setLongitude(dadosJson.getString("longitude"));
+						// parada.setStatus(Boolean.parseBoolean("status"));
+
+						arrayDados.add(parada);
+
+					}
+				}
+				return sb.toString();
+
+			} catch (JSONException e) {
+				Log.e("Erro", "Erro no parsing do JSON", e);
+			}
+			return null;
+		}
+	}
+
+	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( ONIBUS ) WEB SERVICE XXXXXXXXXXXXXXXXXXXXX
 
 }

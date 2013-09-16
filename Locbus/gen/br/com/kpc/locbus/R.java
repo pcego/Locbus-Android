@@ -186,10 +186,11 @@ containing a value of this type.
         public static final int parada=0x7f02001c;
     }
     public static final class id {
-        public static final int action_settings=0x7f05000c;
-        public static final int edtNumeroLinha=0x7f050009;
+        public static final int action_settings=0x7f05000d;
+        public static final int edtImei=0x7f050009;
+        public static final int edtNumeroLinha=0x7f05000a;
         public static final int hybrid=0x7f050004;
-        public static final int listOnibus=0x7f05000a;
+        public static final int listOnibus=0x7f05000b;
         public static final int mapa=0x7f050008;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
@@ -198,22 +199,24 @@ containing a value of this type.
         public static final int tvDescricao=0x7f050006;
         public static final int tvEmpresa=0x7f050007;
         public static final int tvId=0x7f050005;
-        public static final int tvIdOnibus=0x7f05000b;
+        public static final int tvIdOnibus=0x7f05000c;
     }
     public static final class layout {
         public static final int itens_onibus=0x7f030000;
         public static final int mapa=0x7f030001;
         public static final int mapa_buscar=0x7f030002;
-        public static final int onibus=0x7f030003;
-        public static final int onibus_infor=0x7f030004;
-        public static final int principal=0x7f030005;
+        public static final int mapa_consultar_linha=0x7f030003;
+        public static final int onibus=0x7f030004;
+        public static final int onibus_infor=0x7f030005;
+        public static final int principal=0x7f030006;
     }
     public static final class menu {
         public static final int mapa=0x7f090000;
         public static final int mapa_buscar=0x7f090001;
-        public static final int onibus=0x7f090002;
-        public static final int onibus_infor_activyty=0x7f090003;
-        public static final int principal=0x7f090004;
+        public static final int mapa_consultar_linha=0x7f090002;
+        public static final int onibus=0x7f090003;
+        public static final int onibus_infor_activyty=0x7f090004;
+        public static final int principal=0x7f090005;
     }
     public static final class string {
         public static final int action_settings=0x7f060016;
@@ -304,8 +307,12 @@ containing a value of this type.
         /**  Layout Principal 
          */
         public static final int menu_onibus=0x7f060018;
+        public static final int numero_da_linha=0x7f060020;
         public static final int title_activity_mapa=0x7f06001d;
         public static final int title_activity_mapa_buscar=0x7f06001e;
+        /**  Layout Mapa Contulta Linha 
+         */
+        public static final int title_activity_mapa_consultar_linha=0x7f06001f;
         public static final int title_activity_onibus=0x7f06001a;
         public static final int title_activity_onibus_infor_activyty=0x7f06001c;
     }

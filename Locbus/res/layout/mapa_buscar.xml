@@ -20,7 +20,7 @@
         android:orientation="horizontal" >
 
         <ImageButton
-            android:onClick="onClick_lotacoes"
+            android:onClick="onClick_OnibusLinha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/onibus"/>
