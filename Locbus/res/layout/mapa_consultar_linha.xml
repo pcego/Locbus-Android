@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="@string/numero_da_linha" />
     <EditText
-        android:id="@+id/edtImei"
+        android:id="@+id/edtNumeroLinha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
          />

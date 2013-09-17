@@ -52,7 +52,6 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	// Varial que vai grava lat long
 	LatLng latLng = new LatLng(49.187500, -122.849000);
-	// LatLng localizacao = new LatLng(49.187500, -122.849000);
 	private GoogleMap map;
 
 	@Override
@@ -156,24 +155,27 @@ public class MapaActivity extends Activity implements LocationListener {
 	}
 
 	@Override
-	protected void onActivityResult(int codigo, int resultado, Intent it) {
+	protected void onActivityResult(int codigo, int resultado, Intent itRetorno) {
+		super.onActivityResult(codigo, resultado, itRetorno);
 		// Retornos pode ser:
 		// 1 - Onibus de determinada linha;
 		// 2 - Parada de Onibus mais proxima;
 		// 0 - RETORNO_MENU operação cancelada.
+		Log.d("LOG TEST", "MAPA 1");
 
-		Bundle bundle = it != null ? it.getExtras() : null;
-		String msg = bundle.getString("msg");
+		// BUNDLE COM ERRO
+		// Bundle bundle = itRetorno != null ? itRetorno.getExtras() : null;
+		// String msg = bundle.getString("msg");
+
+		Log.d("LOG TEST", "ON PAUSE");
 
 		// Retorno da opção do menu = 0
 		if (codigo == RETORNO_MENU) {
 			// 1 - Onibus de determinada linha;
 			if (resultado == 1) {
 				Toast.makeText(this, "SIM", Toast.LENGTH_SHORT).show();
-				//adicionarMarcador(latLng);
+				// adicionarMarcador(latLng);
 				// Limpamdo o array lsita de dados
-
-				
 
 			}// 2 - Parada de Onibus mais proxima;
 			else if (resultado == 2) {
@@ -185,7 +187,6 @@ public class MapaActivity extends Activity implements LocationListener {
 
 		}
 
-		super.onActivityResult(codigo, resultado, it);
 	}
 
 	public void adicionarMarcador(LatLng latLng) {
@@ -202,7 +203,8 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	}
 
-	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( PARADAS )  WEB SERVICE XXXXXXXXXXXXXXXXXXXXX
+	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( PARADAS ) WEB SERVICE
+	// XXXXXXXXXXXXXXXXXXXXX
 
 	// Declaração de Variaveis Global da Class
 	private ProgressDialog progressDialog;
@@ -270,9 +272,9 @@ public class MapaActivity extends Activity implements LocationListener {
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			 // Limpamdo o array lsita de dados
-			 arrayDados.clear();
-			
+			// Limpamdo o array lsita de dados
+			arrayDados.clear();
+
 			// Animação enquando executa o web service
 			progressDialog = ProgressDialog.show(MapaActivity.this, "Aguarde",
 					"processando...");
@@ -313,7 +315,7 @@ public class MapaActivity extends Activity implements LocationListener {
 				// // Cria um marcador
 				Marker frameworkSystem = map.addMarker(new MarkerOptions()
 						.position(l)
-						.title(p.get_id() + " - "+ p.getDescricao())
+						.title(p.get_id() + " - " + p.getDescricao())
 						.icon(BitmapDescriptorFactory
 								.fromResource(R.drawable.icon_locacao)));
 				// Move a câmera para Framework System com zoom 15.
@@ -380,14 +382,13 @@ public class MapaActivity extends Activity implements LocationListener {
 		}
 	}
 
-	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( PARADAS )WEB SERVICE XXXXXXXXXXXXXXXXXXXXX
-	
-	
-	
-	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( ONIBUS ) WEB SERVICE XXXXXXXXXXXXXXXXXXXXX
+	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( PARADAS )WEB SERVICE
+	// XXXXXXXXXXXXXXXXXXXXX
+
+	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( ONIBUS ) WEB SERVICE
+	// XXXXXXXXXXXXXXXXXXXXX
 
 	Posicao posicao;
-
 
 	// Tarefa assincrona para realizar requisição e tratar retorno
 	class OnibusWS extends AsyncTask<Void, Void, String> {
@@ -396,9 +397,9 @@ public class MapaActivity extends Activity implements LocationListener {
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			 // Limpamdo o array lsita de dados
-			 arrayDados.clear();
-			
+			// Limpamdo o array lsita de dados
+			arrayDados.clear();
+
 			// Animação enquando executa o web service
 			progressDialog = ProgressDialog.show(MapaActivity.this, "Aguarde",
 					"processando...");
@@ -408,7 +409,7 @@ public class MapaActivity extends Activity implements LocationListener {
 		protected String doInBackground(Void... params) {
 			// Passando link como parametro. getLink da class ConexãoServidor
 			return executarWebService(ConexaoServidor.getConexaoServidor()
-					.getLinkOnibus()+ "122");
+					.getLinkOnibus() + "122");
 		}
 
 		@Override
@@ -439,7 +440,7 @@ public class MapaActivity extends Activity implements LocationListener {
 				// // Cria um marcador
 				Marker frameworkSystem = map.addMarker(new MarkerOptions()
 						.position(latLngTemp)
-						.title(p.get_id() + " - "+ p.get_id())
+						.title(p.get_id() + " - " + p.get_id())
 						.icon(BitmapDescriptorFactory
 								.fromResource(R.drawable.icon_locacao)));
 				// Move a câmera para Framework System com zoom 15.
@@ -506,6 +507,7 @@ public class MapaActivity extends Activity implements LocationListener {
 		}
 	}
 
-	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( ONIBUS ) WEB SERVICE XXXXXXXXXXXXXXXXXXXXX
+	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( ONIBUS ) WEB SERVICE
+	// XXXXXXXXXXXXXXXXXXXXX
 
 }

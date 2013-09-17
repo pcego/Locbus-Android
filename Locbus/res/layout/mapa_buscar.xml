@@ -9,10 +9,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MapaBuscarActivity" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -20,16 +16,46 @@
         android:orientation="horizontal" >
 
         <ImageButton
-            android:onClick="onClick_OnibusLinha"
+            android:id="@+id/ibConsultarLinhas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/onibus"/>
+            android:background="@drawable/onibus"
+            android:onClick="onClick_MapaConsultarLinha" />
 
         <ImageButton
-            android:onClick="onClick_parada"
+            android:id="@+id/ibConsultarParada"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/parada"/>
+            android:background="@drawable/parada"
+            android:onClick="onClick_parada" />
     </LinearLayout>
 
+    <!-- Visivel apenas quando é chamado -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/selecione_uma_linha"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/lvLinhas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btConfirmarLinhas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirmar"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btCancelarLinhas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancelar"
+        android:visibility="gone" />
+    
 </LinearLayout>
