@@ -9,16 +9,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Principal" >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:onClick="btnParada"
+        android:text="@string/menu_paradas" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="btnMapa"
-        android:text="@string/menu_mapa" />
+        android:onClick="btnLinha"
+        android:text="@string/menu_linha" />
+
 
     <Button
         android:layout_width="match_parent"
@@ -26,4 +28,9 @@
         android:onClick="btnOnibus"
         android:text="@string/menu_onibus" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="btnMapa"
+        android:text="@string/menu_mapa" />
 </LinearLayout>

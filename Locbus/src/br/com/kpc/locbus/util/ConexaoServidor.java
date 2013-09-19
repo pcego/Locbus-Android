@@ -1,11 +1,12 @@
 package br.com.kpc.locbus.util;
 
 public class ConexaoServidor {
-
+	//Servidor casa       http://187.44.38.252
+	//Servidor restaurante http://187.44.47.206/
 	// Link do web service
-	private final String linkOnibus = "http://187.44.38.252:8080/locBus/rest/veiculos/buscaPorLinha/";
-	private final String linkTodasParadas = "http://187.44.38.252:8080/locBus/rest/paradas/findAll";
-	private final String linkTodaslinhas = "http://187.44.38.252:8080/locBus/rest/linhas/findAll/";
+	private final String linkOnibus = "http://187.44.47.206/locBus/rest/veiculos/buscaPorLinha/";
+	private final String linkTodasParadas = "http://187.44.47.206/locBus/rest/paradas/findAll";
+	private final String linkTodaslinhas = "http://187.44.47.206/locBus/rest/linhas/findAll/";
 	
 	
 	public String getLinkOnibus() {

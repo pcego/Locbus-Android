@@ -1,10 +1,13 @@
 package br.com.kpc.locbus;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 public class Principal extends Activity {
 
@@ -25,7 +28,18 @@ public class Principal extends Activity {
 		Intent i = new Intent(getApplicationContext(), OnibusActivity.class);
 		startActivity(i);
 	}
-	public void btnMapa(View v) {
+	public void btnParada(View v) {		
+		Intent i = new Intent(getApplicationContext(), ParadaBuscarActivity.class);
+		startActivity(i);
+	}
+
+	public void btnLinha(View v) {		
+		Toast.makeText(Principal.this, "LINHA", Toast.LENGTH_SHORT).show();
+//		Intent i = new Intent(getApplicationContext(), MapaActivity.class);
+//		startActivity(i);
+	}
+	public void btnMapa(View v) {		
+//		Toast.makeText(Principal.this, "mapa", Toast.LENGTH_SHORT).show();
 		Intent i = new Intent(getApplicationContext(), MapaActivity.class);
 		startActivity(i);
 	}

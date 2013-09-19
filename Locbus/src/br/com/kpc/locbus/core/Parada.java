@@ -6,6 +6,11 @@ public class Parada {
 	private String longitude;
 	private String descricao;
 	private boolean status;
+	
+	private String rua;
+	private String bairro;
+	
+	
 	public int get_id() {
 		return _id;
 	}
@@ -35,6 +40,18 @@ public class Parada {
 	}
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+	public String getRua() {
+		return rua;
+	}
+	public void setRua(String rua) {
+		this.rua = rua;
+	}
+	public String getBairro() {
+		return bairro;
+	}
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
 	}
 	
 	

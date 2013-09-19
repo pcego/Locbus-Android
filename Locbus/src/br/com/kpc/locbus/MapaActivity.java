@@ -15,15 +15,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -50,8 +54,8 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	private static final int RETORNO_MENU = 0;
 
-	// Varial que vai grava lat long
-	LatLng latLng = new LatLng(49.187500, -122.849000);
+	// Iniciando a variavel que vai grava lat long
+	LatLng latLng = new LatLng(-16.722954, -43.865749);
 	private GoogleMap map;
 
 	@Override
@@ -61,6 +65,7 @@ public class MapaActivity extends Activity implements LocationListener {
 		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
 				0, this);
+
 	}
 
 	@Override
@@ -77,12 +82,100 @@ public class MapaActivity extends Activity implements LocationListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mapa);
 
+		//Chamando o metodo de verificar se o GPS esta ativo.
+		verificarGPSAtivo();
+		
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapa))
 				.getMap();
 
+		// Habilitando a opção meu local no mapa
 		map.setMyLocationEnabled(true);
-		InformacaoMaps informacaoMaps = new InformacaoMaps();
 
+		// Iniciando o mapa no centro de monetes claros
+		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+		map.animateCamera(update);
+
+		// Recebendo valor do activity Parada para ver no mapa
+		Intent intent = getIntent();
+		if (intent.getExtras() != null) {
+			Bundle bundle = intent.getExtras();
+			if (bundle.getString("idParada") != null) {
+				Toast.makeText(getApplicationContext(),
+						"Parada " + bundle.getString("DescricaoParada"),
+						Toast.LENGTH_SHORT).show();
+				adicionarMarcador(
+						new LatLng(Double.parseDouble(bundle
+								.getString("LatitudeParada")),
+								Double.parseDouble(bundle
+										.getString("longitudeParada"))),
+						bundle.getString("DescricaoParada"), R.drawable.parada,
+						true, false);
+			}
+
+		}
+
+	}
+
+	// Verificando se esta ativo o GPS
+	public boolean verificarGPSAtivo() {
+
+		LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+		// Verifica se o GPS está ativo
+		boolean statusGPS = service
+				.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+		if (statusGPS) {
+			return true;
+		}
+		// Caso não esteja ativo abre um novo diálogo com as configurações para
+		// realizar se ativamento
+		if (!statusGPS) {
+			mensagemConfirmacaoAtivarGPS();
+
+		}
+		// Fim da verificação se o GPS esta ativo
+
+		return false;
+	}
+
+	private void mensagemConfirmacaoAtivarGPS() {
+		// Cria o gerador do AlertDialog
+		AlertDialog alerta;
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		// define o titulo
+		builder.setTitle(R.string.alerta_gps_desativado_titulo);
+		// define a mensagem
+		builder.setMessage(R.string.alerta_gps_desativado_pergunta);
+		// define um botão como positivo
+
+		builder.setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface arg0, int arg1) {
+
+				// Chamando a tela de configuração do GPS
+				Intent intent = new Intent(
+						Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+				startActivity(intent);
+
+			}
+		});
+
+		builder.setNegativeButton(R.string.nao, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface arg0, int arg1) {
+
+				Toast.makeText(
+						getApplicationContext(),
+						R.string.alerta_gps_desativado_mensagem_nao_ativou_gps,
+						Toast.LENGTH_LONG).show();
+
+			}
+		});
+		// cria o AlertDialog
+		alerta = builder.create();
+		// Exibe
+		alerta.show();
 	}
 
 	public void onClick_City(View v) {
@@ -108,38 +201,24 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	public void onClick_aki(View v) {
 
-		// RECUPERAR INFORMAÇÃO DA TELA DE BUSCA MAPAS, QUE VAI DAR O RETORNO O
-		// QUE O
-		// USUARIO QUER FAZER-
-
 		startActivityForResult(new Intent(this, MapaBuscarActivity.class),
 				RETORNO_MENU);
-		// Intent i = new Intent(getApplicationContext(),
-		// MapaBuscarActivity.class);
-		// startActivity(i);
-
-		// / Mensagens.instancia().testando();
-
-		// map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-		// CameraUpdate update = CameraUpdateFactory
-		// .newLatLngZoom(localizacao, 16);
-		// map.setMyLocationEnabled(true);
 
 	}
 
 	@Override
 	public void onLocationChanged(Location location) {
-		// Centraliza o mapa nesta coordenada
+		// Centraliza o mapa na coordenada atual
 		latLng = new LatLng(location.getLatitude(), location.getLongitude());
-		// map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-		// Adicionar marcador
+		adicionarMarcador(latLng, "Meu Local", R.drawable.meu_local, false,
+				false);
 
 	}
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
 
+		Toast.makeText(getApplicationContext(), R.string.alerta_usuario_desativou_gps, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -161,50 +240,43 @@ public class MapaActivity extends Activity implements LocationListener {
 		// 1 - Onibus de determinada linha;
 		// 2 - Parada de Onibus mais proxima;
 		// 0 - RETORNO_MENU operação cancelada.
-		Log.d("LOG TEST", "MAPA 1");
 
-		// BUNDLE COM ERRO
-		// Bundle bundle = itRetorno != null ? itRetorno.getExtras() : null;
-		// String msg = bundle.getString("msg");
-
-		Log.d("LOG TEST", "ON PAUSE");
+		String msg;
 
 		// Retorno da opção do menu = 0
 		if (codigo == RETORNO_MENU) {
 			// 1 - Onibus de determinada linha;
 			if (resultado == 1) {
-				Toast.makeText(this, "SIM", Toast.LENGTH_SHORT).show();
-				// adicionarMarcador(latLng);
-				// Limpamdo o array lsita de dados
+				msg = itRetorno.getStringExtra("numeroLinha");
+				Toast.makeText(this, "Linha selecionada: " + msg,
+						Toast.LENGTH_SHORT).show();
 
 			}// 2 - Parada de Onibus mais proxima;
 			else if (resultado == 2) {
-				Toast.makeText(this, "NAO", Toast.LENGTH_SHORT).show();
 				// Chama o WebService em um AsyncTask
-				new TarefaWS().execute();
-
+				new TodasAsParadasWS().execute();
 			}
-
 		}
-
 	}
 
-	public void adicionarMarcador(LatLng latLng) {
-		map.clear();
+	// Informe a Latitude e Longitude, Titulo, Icone do ponto.
+	public void adicionarMarcador(LatLng latLng, String titulo, int icone,
+			boolean zoomNoLocal, boolean limparMapa) {
 
 		// // Cria um marcador LOCAL ONDE ESTA
 		Marker frameworkSystem = map.addMarker(new MarkerOptions()
-				.position(latLng)
-				.title("Ônibus 1222")
-				.icon(BitmapDescriptorFactory
-						.fromResource(R.drawable.icon_locacao)));
-		// Move a câmera para Framework System com zoom 15.
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+				.position(latLng).title(titulo)
+				.icon(BitmapDescriptorFactory.fromResource(icone)));
 
+		// Move a câmera para Framework System com zoom 15.
+		if (zoomNoLocal)
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+
+		if (limparMapa)
+			map.clear();
 	}
 
 	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( PARADAS ) WEB SERVICE
-	// XXXXXXXXXXXXXXXXXXXXX
 
 	// Declaração de Variaveis Global da Class
 	private ProgressDialog progressDialog;
@@ -266,7 +338,7 @@ public class MapaActivity extends Activity implements LocationListener {
 	}
 
 	// Tarefa assincrona para realizar requisição e tratar retorno
-	class TarefaWS extends AsyncTask<Void, Void, String> {
+	class TodasAsParadasWS extends AsyncTask<Void, Void, String> {
 
 		@Override
 		protected void onPreExecute() {
@@ -383,10 +455,8 @@ public class MapaActivity extends Activity implements LocationListener {
 	}
 
 	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( PARADAS )WEB SERVICE
-	// XXXXXXXXXXXXXXXXXXXXX
 
 	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( ONIBUS ) WEB SERVICE
-	// XXXXXXXXXXXXXXXXXXXXX
 
 	Posicao posicao;
 
@@ -508,6 +578,5 @@ public class MapaActivity extends Activity implements LocationListener {
 	}
 
 	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( ONIBUS ) WEB SERVICE
-	// XXXXXXXXXXXXXXXXXXXXX
 
 }

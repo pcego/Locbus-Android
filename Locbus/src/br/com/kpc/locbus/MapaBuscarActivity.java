@@ -49,7 +49,6 @@ public class MapaBuscarActivity extends Activity {
 
 	ListView lvLinhas;
 	ImageButton ibParada, ibLinhas;
-	Button btConfirmarLinhas, btCancelarLinhas;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +56,6 @@ public class MapaBuscarActivity extends Activity {
 		setContentView(R.layout.mapa_buscar);
 		ibLinhas = (ImageButton) findViewById(R.id.ibConsultarLinhas);
 		ibParada = (ImageButton) findViewById(R.id.ibConsultarParada);
-		btConfirmarLinhas = (Button) findViewById(R.id.btConfirmarLinhas);
-		btCancelarLinhas = (Button) findViewById(R.id.btCancelarLinhas);
 		lvLinhas = (ListView) findViewById(R.id.lvLinhas);
 
 		// Quando selecionar algum item da lista fazer...
@@ -75,7 +72,7 @@ public class MapaBuscarActivity extends Activity {
 				// Passando Ônibus selecionado para Activity OnibusInfor
 				Bundle bundle = new Bundle();
 				bundle.putString("numeroLinha",
-						Integer.toString(linhas.get_id()));
+						Integer.toString(linhas.getNumeroLinha()));
 				// Chamando a proxima tela
 				Intent i = new Intent();
 				// Passando o Budle com o valor do id do onibus.
@@ -87,12 +84,6 @@ public class MapaBuscarActivity extends Activity {
 			}
 
 		});
-
-		// Limpamdo o array lsita de dados
-		arrayDados.clear();
-
-		// Chama o WebService em um AsyncTask
-		new TarefaWS().execute();
 
 	}
 
@@ -244,13 +235,19 @@ public class MapaBuscarActivity extends Activity {
 	// xxxxxxxxxxxxxxxx FIM CONSULTA WEB SERVICE
 
 	public void onClick_MapaConsultarLinha(View v) {
+		
 
 		ibParada.setVisibility(View.GONE);
 		ibLinhas.setVisibility(View.GONE);
 		lvLinhas.setVisibility(View.VISIBLE);
-		btConfirmarLinhas.setVisibility(View.VISIBLE);
-		btCancelarLinhas.setVisibility(View.VISIBLE);
 		setTitle(R.string.selecione_uma_linha);
+		
+		// Limpamdo o array lsita de dados
+		arrayDados.clear();
+
+		// Chama o WebService em um AsyncTask
+		new TarefaWS().execute();
+
 
 	}
 
