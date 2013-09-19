@@ -65,17 +65,14 @@ public class MapaBuscarActivity extends Activity {
 					long id) {
 				Object o = lvLinhas.getItemAtPosition(position);
 				linhas = (Linha) o;
-				Toast.makeText(MapaBuscarActivity.this,
-						"Selecionado Linha: " + linhas.getNumeroLinha(),
-						Toast.LENGTH_SHORT).show();
 
-				// Passando Ônibus selecionado para Activity OnibusInfor
+				// Passando item selecionado para Activity
 				Bundle bundle = new Bundle();
 				bundle.putString("numeroLinha",
 						Integer.toString(linhas.getNumeroLinha()));
 				// Chamando a proxima tela
 				Intent i = new Intent();
-				// Passando o Budle com o valor do id do onibus.
+				// Passando o Budle com o valor do id.
 				i.putExtras(bundle);
 				setResult(1, i);
 				// Finalizando a tela.
@@ -152,11 +149,11 @@ public class MapaBuscarActivity extends Activity {
 			super.onPostExecute(result);
 			if (arrayDados.isEmpty()) {
 				Toast.makeText(MapaBuscarActivity.this,
-						"Nenhum registro encontrado!", Toast.LENGTH_SHORT)
+						R.string.nenhum_registro_encontrado, Toast.LENGTH_SHORT)
 						.show();
 			} else {
 				Toast.makeText(MapaBuscarActivity.this,
-						"Informações carregada com sucesso!",
+						R.string.informacoes_carregada_com_sucesso,
 						Toast.LENGTH_SHORT).show();
 				
 				// Enviando os dados para o ListView (Atualizando a tela)

@@ -178,26 +178,20 @@ public class MapaActivity extends Activity implements LocationListener {
 		alerta.show();
 	}
 
-	public void onClick_City(View v) {
+	public void onClick_Satelite(View v) {
 		map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 		com.google.android.gms.maps.CameraUpdate update = CameraUpdateFactory
-				.newLatLngZoom(latLng, 9);
+				.newLatLngZoom(latLng, 15);
 		map.animateCamera(update);
 	}
 
-	public void onClick_Burnaby(View v) {
+	public void onClick_tipo1(View v) {
 		map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 14);
 		map.animateCamera(update);
 
 	}
 
-	public void onClick_Surrey(View v) {
-		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 16);
-		map.animateCamera(update);
-
-	}
 
 	public void onClick_aki(View v) {
 

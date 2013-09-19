@@ -14,29 +14,25 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onClick_Surrey"
-            android:text="Surrey" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClick_Burnaby"
-            android:text="Burnaby" />
+            android:onClick="onClick_tipo1"
+            android:text="tipo 1" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClick_City"
-            android:text="City" />
+            android:onClick="onClick_Satelite"
+            android:text="Satelite" />
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClick_aki"
-            android:text="aki" />
+            android:background="@android:drawable/ic_menu_manage" 
+            />
     </LinearLayout>
     <fragment
         android:id="@+id/mapa"

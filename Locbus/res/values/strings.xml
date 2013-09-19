@@ -2,9 +2,10 @@
 <resources>
 
     <string name="titulo_carregando_webservice">Aguarde</string>
-    <string name="texto_carregando_webservice">processando...</string>
+    <string name="texto_carregando_webservice">processando..</string>
 
-    
+    <string name="informacoes_carregada_com_sucesso">Informações carregada com sucesso!</string>
+    <string name="nenhum_registro_encontrado">Nenhum registro encontrado!</string>
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
     <string name="confirmar">Confirmar</string>
@@ -38,7 +39,9 @@
     <string name="title_activity_onibus_infor_activyty">Informações sobre o Ônibus</string>
     <string name="title_activity_mapa">Mapa</string>
     <string name="title_activity_mapa_buscar">O que você deseja buscar?</string>
-
+    <string name="consulta_de_onibus_por_linha">Consulta de ônibus por linha:</string>
+    <string name="hint_numero_da_linha">Numero da Linha</string>
+    
     <!-- Layout Mapa Contulta Linha -->
     <string name="title_activity_mapa_consultar_linha">Consulta de Veículos por Linha</string>
     <string name="numero_da_linha">Numero da Linha</string>

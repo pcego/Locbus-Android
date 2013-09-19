@@ -215,9 +215,9 @@ containing a value of this type.
         public static final int paradaTvid=0x7f05000b;
         public static final int satellite=0x7f050002;
         public static final int terrain=0x7f050003;
-        public static final int tvDescricao=0x7f050008;
+        public static final int tvDescricao=0x7f050009;
         public static final int tvEmpresa=0x7f05000a;
-        public static final int tvId=0x7f050009;
+        public static final int tvId=0x7f050008;
         public static final int tvIdOnibus=0x7f050014;
     }
     public static final class layout {
@@ -244,14 +244,14 @@ containing a value of this type.
         public static final int principal=0x7f090007;
     }
     public static final class string {
-        public static final int action_settings=0x7f06001d;
-        public static final int alerta_gps_desativado_mensagem_nao_ativou_gps=0x7f060026;
-        public static final int alerta_gps_desativado_pergunta=0x7f060025;
+        public static final int action_settings=0x7f06001f;
+        public static final int alerta_gps_desativado_mensagem_nao_ativou_gps=0x7f060028;
+        public static final int alerta_gps_desativado_pergunta=0x7f060027;
         /**  Layout Mapa 
          */
-        public static final int alerta_gps_desativado_titulo=0x7f060024;
-        public static final int alerta_usuario_desativou_gps=0x7f060028;
-        public static final int app_name=0x7f06001c;
+        public static final int alerta_gps_desativado_titulo=0x7f060026;
+        public static final int alerta_usuario_desativou_gps=0x7f06002a;
+        public static final int app_name=0x7f06001e;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 
          */
@@ -277,8 +277,8 @@ containing a value of this type.
         public static final int auth_client_using_bad_version_title=0x7f06000f;
         /**  Layout Ônibus 
          */
-        public static final int btn_buscar=0x7f060029;
-        public static final int cancelar=0x7f06001a;
+        public static final int btn_buscar=0x7f06002b;
+        public static final int cancelar=0x7f06001c;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -334,35 +334,39 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f06000e;
-        public static final int confirmar=0x7f060019;
-        public static final int hello_world=0x7f06001e;
-        public static final int hint_informe_o_endereco=0x7f060032;
-        public static final int menu_linha=0x7f060022;
-        public static final int menu_mapa=0x7f060020;
+        public static final int confirmar=0x7f06001b;
+        public static final int consulta_de_onibus_por_linha=0x7f06002f;
+        public static final int hello_world=0x7f060020;
+        public static final int hint_informe_o_endereco=0x7f060036;
+        public static final int hint_numero_da_linha=0x7f060030;
+        public static final int informacoes_carregada_com_sucesso=0x7f060017;
+        public static final int menu_linha=0x7f060024;
+        public static final int menu_mapa=0x7f060022;
         /**  Layout Principal 
          */
-        public static final int menu_onibus=0x7f06001f;
-        public static final int menu_paradas=0x7f060021;
-        public static final int meu_local=0x7f060027;
-        public static final int nao=0x7f060018;
-        public static final int numero_da_linha=0x7f06002e;
-        public static final int selecione_uma_linha=0x7f06002f;
-        public static final int selecione_uma_parada=0x7f060031;
-        public static final int sim=0x7f060017;
+        public static final int menu_onibus=0x7f060021;
+        public static final int menu_paradas=0x7f060023;
+        public static final int meu_local=0x7f060029;
+        public static final int nao=0x7f06001a;
+        public static final int nenhum_registro_encontrado=0x7f060018;
+        public static final int numero_da_linha=0x7f060032;
+        public static final int selecione_uma_linha=0x7f060033;
+        public static final int selecione_uma_parada=0x7f060035;
+        public static final int sim=0x7f060019;
         public static final int texto_carregando_webservice=0x7f060016;
-        public static final int title_activity_mapa=0x7f06002b;
-        public static final int title_activity_mapa_buscar=0x7f06002c;
+        public static final int title_activity_mapa=0x7f06002d;
+        public static final int title_activity_mapa_buscar=0x7f06002e;
         /**  Layout Mapa Contulta Linha 
          */
-        public static final int title_activity_mapa_consultar_linha=0x7f06002d;
-        public static final int title_activity_onibus=0x7f060023;
-        public static final int title_activity_onibus_infor_activyty=0x7f06002a;
+        public static final int title_activity_mapa_consultar_linha=0x7f060031;
+        public static final int title_activity_onibus=0x7f060025;
+        public static final int title_activity_onibus_infor_activyty=0x7f06002c;
         /**  Layout Mapa Contulta Linha 
          */
-        public static final int title_activity_parada_buscar=0x7f060030;
-        public static final int title_activity_parada_informacao=0x7f060033;
+        public static final int title_activity_parada_buscar=0x7f060034;
+        public static final int title_activity_parada_informacao=0x7f060037;
         public static final int titulo_carregando_webservice=0x7f060015;
-        public static final int voltar=0x7f06001b;
+        public static final int voltar=0x7f06001d;
     }
     public static final class style {
         /** 

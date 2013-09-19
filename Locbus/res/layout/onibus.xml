@@ -9,6 +9,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".OnibusActivity" >
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/consulta_de_onibus_por_linha" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +23,8 @@
             android:id="@+id/edtNumeroLinha"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:inputType="number" />
+            android:inputType="number" 
+            android:hint="@string/hint_numero_da_linha"/>
 
         <Button
             android:layout_width="match_parent"
