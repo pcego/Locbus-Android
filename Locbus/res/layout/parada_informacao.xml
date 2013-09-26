@@ -12,10 +12,30 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Aqui vai ter as informações da parada" />
+        android:text="Parada: " />
 
     <TextView
-        android:id="@+id/paradaTvInformacao"
+        android:id="@+id/paradaTvDescricao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rua: " />
+
+    <TextView
+        android:id="@+id/paradaTvRua"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bairro: " />
+
+    <TextView
+        android:id="@+id/paradaTvBairro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

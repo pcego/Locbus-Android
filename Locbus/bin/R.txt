@@ -63,7 +63,7 @@ int drawable icon_locacao 0x7f020019
 int drawable meu_local 0x7f02001a
 int drawable onibus 0x7f02001b
 int drawable parada 0x7f02001c
-int id action_settings 0x7f050018
+int id action_settings 0x7f050019
 int id edtNumeroLinha 0x7f050012
 int id hybrid 0x7f050004
 int id ibConsultarLinhas 0x7f05000f
@@ -78,9 +78,10 @@ int id none 0x7f050000
 int id normal 0x7f050001
 int id paradaEdtDescricaoPesquisa 0x7f050015
 int id paradaLvLinhas 0x7f050016
+int id paradaTvBairro 0x7f050018
 int id paradaTvDescricao 0x7f05000c
 int id paradaTvEndereco 0x7f05000d
-int id paradaTvInformacao 0x7f050017
+int id paradaTvRua 0x7f050017
 int id paradaTvid 0x7f05000b
 int id satellite 0x7f050002
 int id terrain 0x7f050003

@@ -37,7 +37,7 @@ import br.com.kpc.locbus.OnibusActivity;
 import br.com.kpc.locbus.OnibusInforActivyty;
 import br.com.kpc.locbus.R;
 import br.com.kpc.locbus.adapter.OnibusAdapter;
-import br.com.kpc.locbus.core.Onibus;
+import br.com.kpc.locbus.core.Veiculo;
 import br.com.kpc.locbus.core.Parada;
 import br.com.kpc.locbus.util.ConexaoServidor;
 

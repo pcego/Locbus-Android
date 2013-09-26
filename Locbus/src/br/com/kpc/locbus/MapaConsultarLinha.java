@@ -3,7 +3,7 @@ package br.com.kpc.locbus;
 import java.util.ArrayList;
 
 import br.com.kpc.locbus.core.Linha;
-import br.com.kpc.locbus.core.Onibus;
+import br.com.kpc.locbus.core.Veiculo;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;

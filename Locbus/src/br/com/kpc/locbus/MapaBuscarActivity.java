@@ -17,7 +17,7 @@ import br.com.kpc.locbus.OnibusActivity.TarefaWS;
 import br.com.kpc.locbus.adapter.LinhasAdapter;
 import br.com.kpc.locbus.adapter.OnibusAdapter;
 import br.com.kpc.locbus.core.Linha;
-import br.com.kpc.locbus.core.Onibus;
+import br.com.kpc.locbus.core.Veiculo;
 import br.com.kpc.locbus.util.ConexaoServidor;
 import android.os.AsyncTask;
 import android.os.Bundle;

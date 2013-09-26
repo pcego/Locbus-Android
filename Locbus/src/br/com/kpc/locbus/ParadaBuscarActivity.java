@@ -32,7 +32,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import br.com.kpc.locbus.adapter.ParadaAdapter;
-import br.com.kpc.locbus.core.Onibus;
+import br.com.kpc.locbus.core.Veiculo;
 import br.com.kpc.locbus.core.Parada;
 import br.com.kpc.locbus.util.ConexaoServidor;
 
@@ -88,9 +88,12 @@ public class ParadaBuscarActivity extends Activity {
 
 						// Passando outra Activyt o valor selecionado
 						Bundle bundle = new Bundle();
-						bundle.putString("idParada",
-								Integer.toString(parada.get_id()));
-												
+
+						bundle.putString("paradaId", Integer.toString(parada.get_id()));
+						bundle.putString("paradaDescricao", parada.getDescricao());
+						bundle.putString("paradaBairro", parada.getBairro());
+						bundle.putString("paradaRua",parada.getRua());
+
 						// Chamando a proxima tela
 						Intent i = new Intent(getApplicationContext(),
 								ParadaInformacao.class);

@@ -28,7 +28,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import br.com.kpc.locbus.adapter.OnibusAdapter;
-import br.com.kpc.locbus.core.Onibus;
+import br.com.kpc.locbus.core.Veiculo;
 import br.com.kpc.locbus.util.ConexaoServidor;
 
 public class OnibusActivity extends Activity {
@@ -41,7 +41,7 @@ public class OnibusActivity extends Activity {
 	// Array que vai armazenar os dados da consulta e coloca no List
 	ArrayList arrayDados = new ArrayList();
 	// Classe
-	Onibus onibus;
+	Veiculo veiculo;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +58,14 @@ public class OnibusActivity extends Activity {
 			public void onItemClick(AdapterView<?> a, View v, int position,
 					long id) {
 				Object o = listView.getItemAtPosition(position);
-				onibus = (Onibus) o;
+				veiculo = (Veiculo) o;
 				Toast.makeText(OnibusActivity.this,
-						"Selecionado :" + " " + onibus.getDescricao(), Toast.LENGTH_SHORT)
+						"Selecionado :" + " " + veiculo.getDescricao(), Toast.LENGTH_SHORT)
 						.show();
 
 				//Passando Ônibus selecionado para Activity OnibusInfor
 				Bundle bundle = new Bundle();
-				bundle.putString("idOnibus", Integer.toString(onibus.get_id()) );
+				bundle.putString("idOnibus", Integer.toString(veiculo.get_id()) );
 				//Chamando a proxima tela
 				Intent i = new Intent(getApplicationContext(), OnibusInforActivyty.class);
 				//Passando o Budle com o valor do id do onibus.
@@ -145,7 +145,7 @@ public class OnibusActivity extends Activity {
 		@Override
 		protected String doInBackground(Void... params) {
 			//Passando link como parametro. getLink da class ConexãoServidor
-			return executarWebService(ConexaoServidor.getConexaoServidor().getLinkOnibus());
+			return executarWebService(ConexaoServidor.getConexaoServidor().getLinkVeiculosPorLinha());
 		}
 
 		@Override
@@ -215,13 +215,13 @@ public class OnibusActivity extends Activity {
 						sb.append('\n');
 						Log.d("TesteWs", sb.toString());
 
-						onibus = new Onibus();
+						veiculo = new Veiculo();
 						//newsData.set_id(Integer.parseInt(dadosJson.getString("id"))) ;
-						onibus.set_id(dadosJson.getInt("id")) ;
-						onibus.setDescricao(dadosJson
+						veiculo.set_id(dadosJson.getInt("id")) ;
+						veiculo.setDescricao(dadosJson
 								.getString("descricao"));
-						onibus.setEmpresa_id(1);
-						arrayDados.add(onibus);
+						veiculo.setEmpresa_id(1);
+						arrayDados.add(veiculo);
 
 					}
 				}

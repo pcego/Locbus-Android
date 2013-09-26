@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import br.com.kpc.locbus.R;
-import br.com.kpc.locbus.core.Onibus;
+import br.com.kpc.locbus.core.Veiculo;
 
 public class OnibusAdapter extends BaseAdapter {
 
@@ -52,11 +52,11 @@ public class OnibusAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		Onibus onibus = (Onibus) listData.get(position);
+		Veiculo veiculo = (Veiculo) listData.get(position);
 
-		holder.id.setText(Integer.toString(onibus.get_id()));
-		holder.descricao.setText(onibus.getDescricao());
-		holder.empresa.setText(Integer.toString(onibus.getEmpresa_id()));
+		holder.id.setText(Integer.toString(veiculo.get_id()));
+		holder.descricao.setText(veiculo.getDescricao());
+		holder.empresa.setText(Integer.toString(veiculo.getEmpresa_id()));
 
 		return convertView;
 	}

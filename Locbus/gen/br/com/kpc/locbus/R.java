@@ -194,7 +194,7 @@ containing a value of this type.
         public static final int parada=0x7f02001c;
     }
     public static final class id {
-        public static final int action_settings=0x7f050018;
+        public static final int action_settings=0x7f050019;
         public static final int edtNumeroLinha=0x7f050012;
         public static final int hybrid=0x7f050004;
         public static final int ibConsultarLinhas=0x7f05000f;
@@ -209,9 +209,10 @@ containing a value of this type.
         public static final int normal=0x7f050001;
         public static final int paradaEdtDescricaoPesquisa=0x7f050015;
         public static final int paradaLvLinhas=0x7f050016;
+        public static final int paradaTvBairro=0x7f050018;
         public static final int paradaTvDescricao=0x7f05000c;
         public static final int paradaTvEndereco=0x7f05000d;
-        public static final int paradaTvInformacao=0x7f050017;
+        public static final int paradaTvRua=0x7f050017;
         public static final int paradaTvid=0x7f05000b;
         public static final int satellite=0x7f050002;
         public static final int terrain=0x7f050003;

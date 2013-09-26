@@ -1,6 +1,6 @@
 package br.com.kpc.locbus.core;
 
-public class Onibus {
+public class Veiculo {
 
 	private int _id;
 	private String descricao;

@@ -4,6 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -20,26 +23,21 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-import br.com.kpc.locbus.core.Onibus;
 import br.com.kpc.locbus.core.Parada;
 import br.com.kpc.locbus.core.Posicao;
+import br.com.kpc.locbus.core.Veiculo;
 import br.com.kpc.locbus.util.ConexaoServidor;
-import br.com.kpc.locbus.util.InformacaoMaps;
-import br.com.kpc.locbus.util.Mensagens;
-import br.com.kpc.locbus.webservice.Paradas;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,6 +51,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapaActivity extends Activity implements LocationListener {
 
 	private static final int RETORNO_MENU = 0;
+
+	ListView listView;
+	// Array que vai armazenar os dados da consulta e coloca no List
+	private ArrayList arrayDados = new ArrayList();
+
+	// private ArrayList<Veiculo> arrayDadosVeiculos = new ArrayList();
+	private List<Veiculo> arrayDadosVeiculos = new ArrayList<Veiculo>();
+
+	private ArrayList arrayUltimaPosicao = new ArrayList();
+
+	// Classe
+	private Parada parada;
+
+	// Classe
+	private Veiculo veiculo;
 
 	// Iniciando a variavel que vai grava lat long
 	LatLng latLng = new LatLng(-16.722954, -43.865749);
@@ -82,9 +95,9 @@ public class MapaActivity extends Activity implements LocationListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mapa);
 
-		//Chamando o metodo de verificar se o GPS esta ativo.
+		// Chamando o metodo de verificar se o GPS esta ativo.
 		verificarGPSAtivo();
-		
+
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapa))
 				.getMap();
 
@@ -151,27 +164,29 @@ public class MapaActivity extends Activity implements LocationListener {
 		builder.setMessage(R.string.alerta_gps_desativado_pergunta);
 		// define um botão como positivo
 
-		builder.setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface arg0, int arg1) {
+		builder.setPositiveButton(R.string.sim,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {
 
-				// Chamando a tela de configuração do GPS
-				Intent intent = new Intent(
-						Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-				startActivity(intent);
+						// Chamando a tela de configuração do GPS
+						Intent intent = new Intent(
+								Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+						startActivity(intent);
 
-			}
-		});
+					}
+				});
 
-		builder.setNegativeButton(R.string.nao, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface arg0, int arg1) {
+		builder.setNegativeButton(R.string.nao,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {
 
-				Toast.makeText(
-						getApplicationContext(),
-						R.string.alerta_gps_desativado_mensagem_nao_ativou_gps,
-						Toast.LENGTH_LONG).show();
+						Toast.makeText(
+								getApplicationContext(),
+								R.string.alerta_gps_desativado_mensagem_nao_ativou_gps,
+								Toast.LENGTH_LONG).show();
 
-			}
-		});
+					}
+				});
 		// cria o AlertDialog
 		alerta = builder.create();
 		// Exibe
@@ -192,7 +207,6 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	}
 
-
 	public void onClick_aki(View v) {
 
 		startActivityForResult(new Intent(this, MapaBuscarActivity.class),
@@ -212,7 +226,9 @@ public class MapaActivity extends Activity implements LocationListener {
 	@Override
 	public void onProviderDisabled(String provider) {
 
-		Toast.makeText(getApplicationContext(), R.string.alerta_usuario_desativou_gps, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getApplicationContext(),
+				R.string.alerta_usuario_desativou_gps, Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	@Override
@@ -241,9 +257,11 @@ public class MapaActivity extends Activity implements LocationListener {
 		if (codigo == RETORNO_MENU) {
 			// 1 - Onibus de determinada linha;
 			if (resultado == 1) {
+
 				msg = itRetorno.getStringExtra("numeroLinha");
 				Toast.makeText(this, "Linha selecionada: " + msg,
 						Toast.LENGTH_SHORT).show();
+				new VeiculosPorLinhaWS().execute();
 
 			}// 2 - Parada de Onibus mais proxima;
 			else if (resultado == 2) {
@@ -274,12 +292,6 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	// Declaração de Variaveis Global da Class
 	private ProgressDialog progressDialog;
-
-	ListView listView;
-	// Array que vai armazenar os dados da consulta e coloca no List
-	ArrayList arrayDados = new ArrayList();
-	// Classe
-	Parada parada;
 
 	// // Botão de carregar os dados
 	// public void btnWSClick() {
@@ -314,8 +326,6 @@ public class MapaActivity extends Activity implements LocationListener {
 		try {
 			HttpResponse response = httpclient.execute(httpget);
 
-			Log.d("PARADA TESTE", " 11  " + response);
-
 			HttpEntity entity = response.getEntity();
 
 			if (entity != null) {
@@ -343,14 +353,14 @@ public class MapaActivity extends Activity implements LocationListener {
 
 			// Animação enquando executa o web service
 			progressDialog = ProgressDialog.show(MapaActivity.this, "Aguarde",
-					"processando...");
+					"Todas as Paradas Processando...");
 		}
 
 		@Override
 		protected String doInBackground(Void... params) {
 			// Passando link como parametro. getLink da class ConexãoServidor
-			return executarWebService(ConexaoServidor.getConexaoServidor()
-					.getLinkTodasParadas());
+			return executarWebServiceParada(ConexaoServidor
+					.getConexaoServidor().getLinkTodasParadas());
 		}
 
 		@Override
@@ -383,7 +393,7 @@ public class MapaActivity extends Activity implements LocationListener {
 						.position(l)
 						.title(p.get_id() + " - " + p.getDescricao())
 						.icon(BitmapDescriptorFactory
-								.fromResource(R.drawable.icon_locacao)));
+								.fromResource(R.drawable.parada - 0)));
 				// Move a câmera para Framework System com zoom 15.
 				// map.moveCamera(CameraUpdateFactory.newLatLngZoom(l, 17));
 
@@ -392,7 +402,7 @@ public class MapaActivity extends Activity implements LocationListener {
 		}
 
 		// Executando o webservice para buscar informações no banco de dados.
-		private String executarWebService(String linkOnibus) {
+		private String executarWebServiceParada(String linkOnibus) {
 			String result = null;
 
 			result = getRESTFileContent(linkOnibus);
@@ -450,36 +460,36 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( PARADAS )WEB SERVICE
 
-	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( ONIBUS ) WEB SERVICE
-
-	Posicao posicao;
+	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( VEICULOS POR LINHA ) WEB SERVICE
 
 	// Tarefa assincrona para realizar requisição e tratar retorno
-	class OnibusWS extends AsyncTask<Void, Void, String> {
+	class VeiculosPorLinhaWS extends AsyncTask<Void, Void, String> {
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			// Limpamdo o array lsita de dados
-			arrayDados.clear();
+			// // Limpamdo o array lsita de dados
+			arrayDadosVeiculos.clear();
 
 			// Animação enquando executa o web service
 			progressDialog = ProgressDialog.show(MapaActivity.this, "Aguarde",
-					"processando...");
+					"Veiculo Por Linha Processando...");
 		}
 
 		@Override
 		protected String doInBackground(Void... params) {
 			// Passando link como parametro. getLink da class ConexãoServidor
-			return executarWebService(ConexaoServidor.getConexaoServidor()
-					.getLinkOnibus() + "122");
+			return executarWebServiceVeiculoPorLinha(ConexaoServidor
+					.getConexaoServidor().getLinkVeiculosPorLinha());
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			if (arrayDados.isEmpty()) {
+			progressDialog.dismiss();
+
+			if (arrayDadosVeiculos.isEmpty()) {
 				Toast.makeText(MapaActivity.this,
 						"Nenhum registro encontrado!", Toast.LENGTH_SHORT)
 						.show();
@@ -487,43 +497,26 @@ public class MapaActivity extends Activity implements LocationListener {
 				Toast.makeText(MapaActivity.this,
 						"Informações carregada com sucesso!",
 						Toast.LENGTH_SHORT).show();
-			}
 
-			progressDialog.dismiss();
-
-			// // Enviando os dados para o ListView (Atualizando a tela)
-			// listView.setAdapter(new OnibusAdapter(Paradas.this,
-			// arrayDados));
-			LatLng latLngTemp;
-			Iterator<Posicao> it = arrayDados.iterator();
-			while (it.hasNext()) {
-				Posicao p = it.next();
-
-				latLngTemp = new LatLng(Double.parseDouble(p.getLatitude()),
-						Double.parseDouble(p.getLongitude()));
-				// // Cria um marcador
-				Marker frameworkSystem = map.addMarker(new MarkerOptions()
-						.position(latLngTemp)
-						.title(p.get_id() + " - " + p.get_id())
-						.icon(BitmapDescriptorFactory
-								.fromResource(R.drawable.icon_locacao)));
-				// Move a câmera para Framework System com zoom 15.
-				// map.moveCamera(CameraUpdateFactory.newLatLngZoom(l, 17));
+				// Criando e iniciando a thread definida
+				Thread thread = new ThreadBasica1();
+				thread.start();
 
 			}
 
 		}
 
 		// Executando o webservice para buscar informações no banco de dados.
-		private String executarWebService(String linkOnibus) {
+		private String executarWebServiceVeiculoPorLinha(
+				String LinkVeiculosPorLinha) {
 			String result = null;
 
-			result = getRESTFileContent(linkOnibus);
+			result = getRESTFileContent(LinkVeiculosPorLinha + "122");
 
 			if (result == null) {
-				Log.e("Paradas", "Falha ao acessar WS");
+				Log.e("Veiculos", "Falha ao acessar WS");
 				Toast.makeText(getApplicationContext(),
-						"Paradas Falha ao acessar WS", Toast.LENGTH_SHORT)
+						"Veiculo Falha ao acessar WS", Toast.LENGTH_SHORT)
 						.show();
 				return null;
 			}
@@ -531,11 +524,11 @@ public class MapaActivity extends Activity implements LocationListener {
 			try {
 				JSONObject json = new JSONObject(result);
 				StringBuffer sb = new StringBuffer();
-				JSONArray dadosArray = json.getJSONArray("parada");
-				JSONObject dadosJson;
+				JSONArray arrayJsonVeiculo = json.getJSONArray("veiculo");
+				JSONObject objetoJsonVeiculo;
 
 				// Se tem apenas um registro no banco
-				if (dadosArray.length() == 1) {
+				if (arrayJsonVeiculo.length() == 1) {
 					// for (int i = 0; i < pessoasArray.length(); i++) {
 					// pessoaJson = new JSONObject(pessoasArray.getString(i));
 					// sb.append("id=" + json.getLong("id"));
@@ -544,22 +537,27 @@ public class MapaActivity extends Activity implements LocationListener {
 					// Log.d("TesteWs", sb.toString());
 				}
 				// se tem mais de um registro no banco cria um array
-				else if (dadosArray.length() > 1) {
+				else if (arrayJsonVeiculo.length() > 1) {
 
-					for (int i = 0; i < dadosArray.length(); i++) {
-						dadosJson = new JSONObject(dadosArray.getString(i));
+					arrayDadosVeiculos.clear();
 
-						parada = new Parada();
-						// newsData.set_id(Integer.parseInt(dadosJson.getString("id")))
-						// ;
-						parada.set_id(dadosJson.getInt("id"));
-						parada.setDescricao(dadosJson.getString("descricao"));
-						parada.setLatitude(dadosJson.getString("latitude"));
-						parada.setLongitude(dadosJson.getString("longitude"));
-						// parada.setStatus(Boolean.parseBoolean("status"));
+					for (int i = 0; i < arrayJsonVeiculo.length(); i++) {
+						objetoJsonVeiculo = new JSONObject(
+								arrayJsonVeiculo.getString(i));
 
-						arrayDados.add(parada);
+						veiculo = new Veiculo();
 
+						veiculo.set_id(objetoJsonVeiculo.getInt("id"));
+						veiculo.setDescricao(objetoJsonVeiculo
+								.getString("descricao"));
+						veiculo.setImei(objetoJsonVeiculo.getString("imei"));
+						// YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+						arrayDadosVeiculos.add(veiculo);
+
+						Log.d("WebService veiculo nome ",
+								objetoJsonVeiculo.getString("descricao"));
+						Log.d("WebService veiculo ",
+								"" + arrayDadosVeiculos.size());
 					}
 				}
 				return sb.toString();
@@ -571,6 +569,206 @@ public class MapaActivity extends Activity implements LocationListener {
 		}
 	}
 
-	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( ONIBUS ) WEB SERVICE
+	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( VEICULOS POR LINHA )WEB SERVICE
+
+	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( ULTIMAS POSIÇÕES ) WEB SERVICE
+
+	Posicao posicao;
+
+	// Tarefa assincrona para realizar requisição e tratar retorno
+	class UltimaPosicaoWS extends AsyncTask<Void, Void, String> {
+
+		// Definindo e inicializando as variaveis como NULL
+		String idUltimaPosicao = null;
+		String latitude = null;
+		String longitude = null;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+
+			// limpando array
+			arrayUltimaPosicao.clear();
+			// Limpamdo o mapa
+			map.clear();
+
+			// Animação enquando executa o web service
+			progressDialog = ProgressDialog.show(MapaActivity.this, "Aguarde",
+					"Ultima Posição processando...");
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+
+			// Executando o webservice para buscar informações no banco de
+			// dados.
+			String result = null;
+			// Passando link como parametro. getLink da class ConexãoServidor
+			result = getRESTFileContent(ConexaoServidor.getConexaoServidor()
+					.getLinkUltimaPosicaoImei());
+
+			if (result == null) {
+				Log.e("Veiculos", "Falha ao acessar WS");
+				Toast.makeText(getApplicationContext(),
+						"Veiculo Falha ao acessar WS", Toast.LENGTH_SHORT)
+						.show();
+				return null;
+			}
+
+			try {
+
+				String json = result;
+				JSONObject o = new JSONObject(json);
+				String status = o.getString("id");
+
+				Log.d("KENNEDI TESTANDO ", "retorno " + status);
+				Log.d("KENNEDI TESTANDO ", o.getString("latitude"));
+				Log.d("KENNEDI TESTANDO ", o.getString("longitude"));
+
+				idUltimaPosicao = (o.getString("id"));
+				latitude = (o.getString("latitude"));
+				longitude = (o.getString("longitude"));
+
+			} catch (JSONException e) {
+				Log.e("Erro", "Erro no parsing do JSON", e);
+			}
+			return null;
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			progressDialog.dismiss();
+
+			if (latitude == null && longitude == null) {
+				Toast.makeText(MapaActivity.this,
+						"Nenhum registro encontrado!", Toast.LENGTH_SHORT)
+						.show();
+			} else {
+				Toast.makeText(MapaActivity.this,
+						"Informações carregada com sucesso!",
+						Toast.LENGTH_SHORT).show();
+
+				// Criando um marcador
+				LatLng latLngTemp;
+				latLngTemp = new LatLng(Double.parseDouble(latitude),
+						Double.parseDouble(longitude));
+
+				adicionarMarcador(latLngTemp, "Titulo",
+						R.drawable.icon_locacao, true, false);
+			}
+
+		}
+
+	}
+
+	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( ULTIMAS POSIÇÕES ) WEB SERVICE
+
+	// Definindo e inicializando as variaveis como NULL
+	String idUltimaPosicao = null;
+	String latitude = null;
+	String longitude = null;
+
+	// public void buscarPosicoes() {
+	// Iterator<Veiculo> it = arrayDadosVeiculos.listIterator();
+	// while (it.hasNext()) {
+	// veiculo = it.next();
+	//
+	// Log.d("LOOP dados veiculos",
+	// veiculo.get_id() + " " + veiculo.getDescricao() + " - ");
+	//
+	// }
+	//
+	// }
+
+	public void fazerAlgoDemorado() {
+
+		Log.d("Fazendo algo", "iniciando metodo");
+
+		// arrayDadosVeiculos = new ArrayList<Veiculo>();
+
+		veiculo = new Veiculo();
+		Iterator<Veiculo> it = arrayDadosVeiculos.listIterator();
+
+		// Log.d("verificando array", arrayDadosVeiculos.get(0).getImei());
+		// Log.d("verificando array", arrayDadosVeiculos.get(1).getImei());
+
+		while (it.hasNext()) {
+
+			// Log.d("Fazendo algo 1", veiculo.getImei());
+			veiculo = it.next();
+			Log.d("Fazendo algo 2", veiculo.getImei());
+
+			// Executando o webservice para buscar informações no banco de
+			// dados.
+			String result = null;
+			// Passando link como parametro. getLink da class ConexãoServidor
+			result = getRESTFileContent(ConexaoServidor.getConexaoServidor()
+					.getLinkUltimaPosicaoImei() + veiculo.getImei());
+
+			Log.d("Faz algo demorado", "Result " + result);
+
+			if (result == null) {
+				Log.e("Veiculos", "Falha ao acessar WS");
+				Toast.makeText(getApplicationContext(),
+						"Veiculo Falha ao acessar WS", Toast.LENGTH_SHORT)
+						.show();
+			} else {
+
+				try {
+
+					String json = result;
+					JSONObject o = new JSONObject(json);
+					String status = o.getString("id");
+
+					Log.d("KENNEDI TESTANDO ", "retorno " + status);
+					Log.d("KENNEDI TESTANDO ", o.getString("latitude"));
+					Log.d("KENNEDI TESTANDO ", o.getString("longitude"));
+
+					idUltimaPosicao = (o.getString("id"));
+					latitude = (o.getString("latitude"));
+					longitude = (o.getString("longitude"));
+
+					Log.d("KENNEDI TESTANDO ", "apos carregar variaveis");
+
+				} catch (JSONException e) {
+					Log.e("Erro", "Erro no parsing do JSON", e);
+				}
+				Log.d("KENNEDI TESTANDO ", "2 apos carregar variaveis");
+
+				// Criando um marcador
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						LatLng latLngTemp;
+						latLngTemp = new LatLng(Double.parseDouble(latitude),
+								Double.parseDouble(longitude));
+
+						adicionarMarcador(latLngTemp, "Titulo",
+								R.drawable.icon_locacao, true, false);
+
+					}
+				});
+			}
+			Log.d("KENNEDI TESTANDO ", "3 apos carregar variaveis");
+
+		}
+
+		Log.d("Fazendo algo", "fim do metodo");
+
+	}
+
+	// INICIANDO THREADS NOVA
+	// A classe ThreadBasica1 herda de Thread
+	class ThreadBasica1 extends Thread {
+		// Este método(run()) é chamado quando a thread é iniciada
+		public void run() {
+			fazerAlgoDemorado();
+		}
+	}
+	// FINALIZANDO THREADS NOVA
 
 }

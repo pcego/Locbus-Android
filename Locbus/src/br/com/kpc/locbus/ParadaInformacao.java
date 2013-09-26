@@ -9,21 +9,28 @@ import android.widget.Toast;
 
 public class ParadaInformacao extends Activity {
 
-	private TextView tvParada;
-	
+	private TextView tvDescricao;
+	private TextView tvRua;
+	private TextView tvBairro;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.parada_informacao);
 		
 		
-		tvParada = (TextView) findViewById(R.id.paradaTvInformacao);
-		
+		tvDescricao = (TextView) findViewById(R.id.paradaTvDescricao);
+		tvRua = (TextView) findViewById(R.id.paradaTvRua);
+		tvBairro = (TextView) findViewById(R.id.paradaTvBairro);
+
 		//Recebendo valor do activity anterior
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
-		tvParada.setText("Id da parada selecionada = " + bundle.getString("idParada"));
 
+		tvDescricao.setText(bundle.getString("paradaDescricao"));
+		tvRua.setText(bundle.getString("paradaBairro"));
+		tvBairro.setText(bundle.getString("paradaRua"));
+
+		
 
 	}
 
