@@ -6,6 +6,9 @@ public class ConexaoServidor {
 	// Link do web service
 	private final String linkVeiculosPorLinha = "http://187.44.47.206/locBus/rest/veiculos/buscaPorLinha/";
 	private final String linkTodasParadas = "http://187.44.47.206/locBus/rest/paradas/findAll";
+	private final String linkParadasPorRua = "http://187.44.47.206/locBus/rest/paradas/getPorRua/";
+	private final String linkParadasPorBairro = "http://187.44.47.206/locBus/rest/paradas/getPorBairro/";
+
 	private final String linkTodaslinhas = "http://187.44.47.206/locBus/rest/linhas/findAll/";
 	private final String linkUltimaPosicaoImei = "http://187.44.47.206/locBus/rest/posicoes/getUltimaPosicao/";
 	
@@ -25,6 +28,16 @@ public class ConexaoServidor {
 
 	public String getLinkUltimaPosicaoImei() {
 		return linkUltimaPosicaoImei;
+	}
+
+
+
+	public String getLinkParadasPorRua() {
+		return linkParadasPorRua;
+	}
+
+	public String getLinkParadasPorBairro() {
+		return linkParadasPorBairro;
 	}
 
 

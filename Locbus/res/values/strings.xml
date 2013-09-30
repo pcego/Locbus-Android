@@ -47,10 +47,17 @@
     <string name="numero_da_linha">Numero da Linha</string>
     <string name="selecione_uma_linha">Selecione uma linha:</string>
 
-    <!-- Layout Mapa Contulta Linha -->
+    <!-- Layout Parada Linha -->
     <string name="title_activity_parada_buscar">Buscar Paradas</string>
     <string name="selecione_uma_parada">Selecione</string>
     <string name="hint_informe_o_endereco">Informe o endereço</string>
     <string name="title_activity_parada_informacao">Informações da Parada</string>
-
+	<string-array name="opcao_de_busca_paradas">
+    	<item >Todas</item>
+        <item >Rua</item>
+        <item >Bairro</item>
+	</string-array>
+    
+    
+    
 </resources>

@@ -261,7 +261,7 @@ public class MapaActivity extends Activity implements LocationListener {
 				msg = itRetorno.getStringExtra("numeroLinha");
 				Toast.makeText(this, "Linha selecionada: " + msg,
 						Toast.LENGTH_SHORT).show();
-				new VeiculosPorLinhaWS().execute();
+				new VeiculosPorLinhaWS().execute(msg);
 
 			}// 2 - Parada de Onibus mais proxima;
 			else if (resultado == 2) {
@@ -463,7 +463,7 @@ public class MapaActivity extends Activity implements LocationListener {
 	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( VEICULOS POR LINHA ) WEB SERVICE
 
 	// Tarefa assincrona para realizar requisição e tratar retorno
-	class VeiculosPorLinhaWS extends AsyncTask<Void, Void, String> {
+	class VeiculosPorLinhaWS extends AsyncTask<String, Void, String> {
 
 		@Override
 		protected void onPreExecute() {
@@ -478,10 +478,11 @@ public class MapaActivity extends Activity implements LocationListener {
 		}
 
 		@Override
-		protected String doInBackground(Void... params) {
+		protected String doInBackground(String... params) {
+			String imei = params[0];
 			// Passando link como parametro. getLink da class ConexãoServidor
 			return executarWebServiceVeiculoPorLinha(ConexaoServidor
-					.getConexaoServidor().getLinkVeiculosPorLinha());
+					.getConexaoServidor().getLinkVeiculosPorLinha()+imei);
 		}
 
 		@Override
@@ -509,9 +510,10 @@ public class MapaActivity extends Activity implements LocationListener {
 		// Executando o webservice para buscar informações no banco de dados.
 		private String executarWebServiceVeiculoPorLinha(
 				String LinkVeiculosPorLinha) {
+			
 			String result = null;
 
-			result = getRESTFileContent(LinkVeiculosPorLinha + "122");
+			result = getRESTFileContent(LinkVeiculosPorLinha);
 
 			if (result == null) {
 				Log.e("Veiculos", "Falha ao acessar WS");

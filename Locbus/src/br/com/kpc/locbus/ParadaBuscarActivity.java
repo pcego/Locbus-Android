@@ -3,6 +3,7 @@ package br.com.kpc.locbus;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import br.com.kpc.locbus.adapter.ParadaAdapter;
@@ -38,6 +40,19 @@ import br.com.kpc.locbus.util.ConexaoServidor;
 
 public class ParadaBuscarActivity extends Activity {
 
+	// Declaração de Variaveis Global da Class
+	ListView listView;
+
+	String opBuscaSelecionada;
+
+	Spinner spOpcaoBusca;
+	// Array que vai armazenar os dados da consulta e coloca no List
+	ArrayList arrayDados = new ArrayList();
+	// Classe
+	Parada parada;
+
+	private String[] arrayOpcoesBusca;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,9 +60,46 @@ public class ParadaBuscarActivity extends Activity {
 
 		listView = (ListView) findViewById(R.id.paradaLvLinhas);
 
-		// Chama o WebService em um AsyncTask
-		new TarefaWS().execute();
+		arrayOpcoesBusca = getResources().getStringArray(
+				R.array.opcao_de_busca_paradas);
+		spOpcaoBusca = (Spinner) findViewById(R.id.paradaSpOpcaoBusca);
 
+		// Cria um ArrayAdapter usando um padrão de layout da classe R do
+		// android, passando o ArrayList nomes
+		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_dropdown_item, arrayOpcoesBusca);
+		ArrayAdapter<String> spinnerArrayAdapter = arrayAdapter;
+		spinnerArrayAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_item);
+		spOpcaoBusca.setAdapter(spinnerArrayAdapter);
+
+		// Método do Spinner para capturar o item selecionado
+		spOpcaoBusca
+				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+					@Override
+					public void onItemSelected(AdapterView<?> parent, View v,
+							int posicao, long id) {
+
+						// pega nome pela posição
+						opBuscaSelecionada = parent.getItemAtPosition(posicao)
+								.toString();
+						// //imprime um Toast na tela com o nome que foi
+						// selecionado
+						Toast.makeText(ParadaBuscarActivity.this,
+								"Nome Selecionado: " + opBuscaSelecionada,
+								Toast.LENGTH_LONG).show();
+
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> parent) {
+
+					}
+				});
+
+		// Chama o WebService em um AsyncTask
+		new BuscarParadasWS().execute();
 		// Implementação do Menu da ListView
 		registerForContextMenu(listView);
 
@@ -89,10 +141,12 @@ public class ParadaBuscarActivity extends Activity {
 						// Passando outra Activyt o valor selecionado
 						Bundle bundle = new Bundle();
 
-						bundle.putString("paradaId", Integer.toString(parada.get_id()));
-						bundle.putString("paradaDescricao", parada.getDescricao());
+						bundle.putString("paradaId",
+								Integer.toString(parada.get_id()));
+						bundle.putString("paradaDescricao",
+								parada.getDescricao());
 						bundle.putString("paradaBairro", parada.getBairro());
-						bundle.putString("paradaRua",parada.getRua());
+						bundle.putString("paradaRua", parada.getRua());
 
 						// Chamando a proxima tela
 						Intent i = new Intent(getApplicationContext(),
@@ -116,11 +170,11 @@ public class ParadaBuscarActivity extends Activity {
 								Integer.toString(parada.get_id()));
 
 						bundle.putString("LatitudeParada", parada.getLatitude());
-						bundle.putString("longitudeParada",parada.getLongitude());
-						bundle.putString("DescricaoParada", parada.getDescricao());
-	
-						
-						
+						bundle.putString("longitudeParada",
+								parada.getLongitude());
+						bundle.putString("DescricaoParada",
+								parada.getDescricao());
+
 						// Chamando a proxima tela
 						Intent i = new Intent(getApplicationContext(),
 								MapaActivity.class);
@@ -169,12 +223,6 @@ public class ParadaBuscarActivity extends Activity {
 	// }
 
 	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( PARADAS ) WEB SERVICE
-	// Declaração de Variaveis Global da Class
-	ListView listView;
-	// Array que vai armazenar os dados da consulta e coloca no List
-	ArrayList arrayDados = new ArrayList();
-	// Classe
-	Parada parada;
 
 	private ProgressDialog progressDialog;
 
@@ -218,7 +266,7 @@ public class ParadaBuscarActivity extends Activity {
 	}
 
 	// Tarefa assincrona para realizar requisição e tratar retorno
-	class TarefaWS extends AsyncTask<Void, Void, String> {
+	class BuscarParadasWS extends AsyncTask<Void, Void, String> {
 
 		@Override
 		protected void onPreExecute() {
@@ -242,6 +290,8 @@ public class ParadaBuscarActivity extends Activity {
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
+			progressDialog.dismiss();
+
 			if (arrayDados.isEmpty()) {
 				Toast.makeText(ParadaBuscarActivity.this,
 						"Nenhum registro encontrado!", Toast.LENGTH_SHORT)
@@ -250,19 +300,20 @@ public class ParadaBuscarActivity extends Activity {
 				Toast.makeText(ParadaBuscarActivity.this,
 						"Informações carregada com sucesso!",
 						Toast.LENGTH_SHORT).show();
+
+				// Enviando os dados para o ListView (Atualizando a tela)
+				listView.setAdapter(new ParadaAdapter(
+						ParadaBuscarActivity.this, arrayDados));
+
 			}
-
-			progressDialog.dismiss();
-
-			// Enviando os dados para o ListView (Atualizando a tela)
-			listView.setAdapter(new ParadaAdapter(ParadaBuscarActivity.this,
-					arrayDados));
 
 		}
 
 		// Executando o webservice para buscar informações no banco de dados.
 		private String executarWebService(String linkOnibus) {
 			String result = null;
+			
+
 
 			result = getRESTFileContent(linkOnibus);
 
@@ -302,10 +353,9 @@ public class ParadaBuscarActivity extends Activity {
 						parada.setDescricao(dadosJson.getString("descricao"));
 						parada.setLatitude(dadosJson.getString("latitude"));
 						parada.setLongitude(dadosJson.getString("longitude"));
-						// parada.setStatus(dadosJson.getBoolean("status"));
-						parada.setBairro(dadosJson.getString("endereco"));
+						parada.setBairro(dadosJson.getString("bairro"));
+						parada.setRua(dadosJson.getString("rua"));
 
-						Log.d("aaaaaaaaaaa", dadosJson.getString("endereco"));
 						// parada.setRua(dadosJson.getString("rua"));
 						arrayDados.add(parada);
 

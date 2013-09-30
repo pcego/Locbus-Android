@@ -8,6 +8,9 @@
 package br.com.kpc.locbus;
 
 public final class R {
+    public static final class array {
+        public static final int opcao_de_busca_paradas=0x7f080000;
+    }
     public static final class attr {
         /** <p>Must be a floating point value, such as "<code>1.2</code>".
 <p>This may also be a reference to a resource (in the form
@@ -194,7 +197,7 @@ containing a value of this type.
         public static final int parada=0x7f02001c;
     }
     public static final class id {
-        public static final int action_settings=0x7f050019;
+        public static final int action_settings=0x7f05001a;
         public static final int edtNumeroLinha=0x7f050012;
         public static final int hybrid=0x7f050004;
         public static final int ibConsultarLinhas=0x7f05000f;
@@ -207,12 +210,13 @@ containing a value of this type.
         public static final int mapa=0x7f05000e;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
-        public static final int paradaEdtDescricaoPesquisa=0x7f050015;
-        public static final int paradaLvLinhas=0x7f050016;
-        public static final int paradaTvBairro=0x7f050018;
+        public static final int paradaEdtDescricaoPesquisa=0x7f050016;
+        public static final int paradaLvLinhas=0x7f050017;
+        public static final int paradaSpOpcaoBusca=0x7f050015;
+        public static final int paradaTvBairro=0x7f050019;
         public static final int paradaTvDescricao=0x7f05000c;
         public static final int paradaTvEndereco=0x7f05000d;
-        public static final int paradaTvRua=0x7f050017;
+        public static final int paradaTvRua=0x7f050018;
         public static final int paradaTvid=0x7f05000b;
         public static final int satellite=0x7f050002;
         public static final int terrain=0x7f050003;
@@ -235,14 +239,14 @@ containing a value of this type.
         public static final int principal=0x7f03000a;
     }
     public static final class menu {
-        public static final int mapa=0x7f090000;
-        public static final int mapa_buscar=0x7f090001;
-        public static final int mapa_consultar_linha=0x7f090002;
-        public static final int onibus=0x7f090003;
-        public static final int onibus_infor_activyty=0x7f090004;
-        public static final int parada_buscar=0x7f090005;
-        public static final int parada_informacao=0x7f090006;
-        public static final int principal=0x7f090007;
+        public static final int mapa=0x7f0a0000;
+        public static final int mapa_buscar=0x7f0a0001;
+        public static final int mapa_consultar_linha=0x7f0a0002;
+        public static final int onibus=0x7f0a0003;
+        public static final int onibus_infor_activyty=0x7f0a0004;
+        public static final int parada_buscar=0x7f0a0005;
+        public static final int parada_informacao=0x7f0a0006;
+        public static final int principal=0x7f0a0007;
     }
     public static final class string {
         public static final int action_settings=0x7f06001f;
@@ -362,7 +366,7 @@ containing a value of this type.
         public static final int title_activity_mapa_consultar_linha=0x7f060031;
         public static final int title_activity_onibus=0x7f060025;
         public static final int title_activity_onibus_infor_activyty=0x7f06002c;
-        /**  Layout Mapa Contulta Linha 
+        /**  Layout Parada Linha 
          */
         public static final int title_activity_parada_buscar=0x7f060034;
         public static final int title_activity_parada_informacao=0x7f060037;
@@ -391,11 +395,11 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f080000;
+        public static final int AppBaseTheme=0x7f090000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f080001;
+        public static final int AppTheme=0x7f090001;
     }
     public static final class styleable {
         /** Attributes that can be used with a MapAttrs.
