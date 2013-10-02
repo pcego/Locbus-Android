@@ -360,7 +360,7 @@ public class MapaActivity extends Activity implements LocationListener {
 		protected String doInBackground(Void... params) {
 			// Passando link como parametro. getLink da class ConexãoServidor
 			return executarWebServiceParada(ConexaoServidor
-					.getConexaoServidor().getLinkTodasParadas());
+					.getConexaoServidor().getLinkParadasTodas());
 		}
 
 		@Override
@@ -619,6 +619,8 @@ public class MapaActivity extends Activity implements LocationListener {
 
 			try {
 
+				//Pode rira isso e deixa o result no JSONObject(result)
+				//testar depois
 				String json = result;
 				JSONObject o = new JSONObject(json);
 				String status = o.getString("id");

@@ -57,6 +57,11 @@
         <item >Rua</item>
         <item >Bairro</item>
 	</string-array>
+
+	<!-- Layout Buscar Paradas -->
+    <string name="limite_minimo_de_caracteres">Precisamos que você digite no mínimo 3 caracteres.</string>
+		
+	
     
     
     

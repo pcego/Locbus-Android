@@ -28,13 +28,9 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/ic_menu_search" />
+            android:background="@android:drawable/ic_menu_search"
+            android:onClick="btnBuscar" />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/selecione_uma_parada" />
 
     <ListView
         android:id="@+id/paradaLvLinhas"

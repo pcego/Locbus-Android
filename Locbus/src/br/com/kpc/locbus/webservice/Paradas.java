@@ -123,7 +123,7 @@ public class Paradas extends Activity {
 		protected String doInBackground(Void... params) {
 			// Passando link como parametro. getLink da class ConexãoServidor
 			return executarWebService(ConexaoServidor.getConexaoServidor()
-					.getLinkTodasParadas());
+					.getLinkParadasTodas());
 		}
 
 		@Override

@@ -145,6 +145,7 @@ int string hello_world 0x7f060020
 int string hint_informe_o_endereco 0x7f060036
 int string hint_numero_da_linha 0x7f060030
 int string informacoes_carregada_com_sucesso 0x7f060017
+int string limite_minimo_de_caracteres 0x7f060038
 int string menu_linha 0x7f060024
 int string menu_mapa 0x7f060022
 int string menu_onibus 0x7f060021

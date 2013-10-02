@@ -345,6 +345,9 @@ containing a value of this type.
         public static final int hint_informe_o_endereco=0x7f060036;
         public static final int hint_numero_da_linha=0x7f060030;
         public static final int informacoes_carregada_com_sucesso=0x7f060017;
+        /**  Layout Buscar Paradas 
+         */
+        public static final int limite_minimo_de_caracteres=0x7f060038;
         public static final int menu_linha=0x7f060024;
         public static final int menu_mapa=0x7f060022;
         /**  Layout Principal 

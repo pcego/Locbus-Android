@@ -3,6 +3,7 @@ package br.com.kpc.locbus;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -13,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -29,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -44,7 +47,7 @@ public class ParadaBuscarActivity extends Activity {
 	ListView listView;
 
 	String opBuscaSelecionada;
-
+	EditText DescricaoPesquisa;
 	Spinner spOpcaoBusca;
 	// Array que vai armazenar os dados da consulta e coloca no List
 	ArrayList arrayDados = new ArrayList();
@@ -59,7 +62,7 @@ public class ParadaBuscarActivity extends Activity {
 		setContentView(R.layout.parada_buscar);
 
 		listView = (ListView) findViewById(R.id.paradaLvLinhas);
-
+		DescricaoPesquisa = (EditText) findViewById(R.id.paradaEdtDescricaoPesquisa);
 		arrayOpcoesBusca = getResources().getStringArray(
 				R.array.opcao_de_busca_paradas);
 		spOpcaoBusca = (Spinner) findViewById(R.id.paradaSpOpcaoBusca);
@@ -84,12 +87,14 @@ public class ParadaBuscarActivity extends Activity {
 						// pega nome pela posição
 						opBuscaSelecionada = parent.getItemAtPosition(posicao)
 								.toString();
-						// //imprime um Toast na tela com o nome que foi
-						// selecionado
-						Toast.makeText(ParadaBuscarActivity.this,
-								"Nome Selecionado: " + opBuscaSelecionada,
-								Toast.LENGTH_LONG).show();
-
+						if (opBuscaSelecionada.equalsIgnoreCase("Todas")) {
+							DescricaoPesquisa.setEnabled(false);
+							DescricaoPesquisa.setHint("");
+						} else {
+							DescricaoPesquisa.setEnabled(true);
+							DescricaoPesquisa
+									.setHint(R.string.hint_informe_o_endereco);
+						}
 					}
 
 					@Override
@@ -98,8 +103,6 @@ public class ParadaBuscarActivity extends Activity {
 					}
 				});
 
-		// Chama o WebService em um AsyncTask
-		new BuscarParadasWS().execute();
 		// Implementação do Menu da ListView
 		registerForContextMenu(listView);
 
@@ -121,6 +124,46 @@ public class ParadaBuscarActivity extends Activity {
 
 		});
 
+	}
+
+	public void btnBuscar(View v) {
+		//Verificando se tem no minimo 3 caracteres no campo de busca.
+		if (DescricaoPesquisa.getText().length() >= 3) {
+			if (opBuscaSelecionada.equalsIgnoreCase("Todas")) {
+				// Chama o WebService em um AsyncTask para Todas as Paradas
+				// Passando link do WebService
+				new BuscarParadasWS().execute(ConexaoServidor
+						.getConexaoServidor().getLinkParadasTodas());
+
+			} else if (opBuscaSelecionada.equalsIgnoreCase("Bairro")) {
+				// Chama o WebService em um AsyncTask para Paradas de acordo com
+				// o
+				// Bairro digitado
+				// Passando link do WebService
+				new BuscarParadasWS().execute(ConexaoServidor
+						.getConexaoServidor().getLinkParadasPorBairro()
+						+ DescricaoPesquisa.getText());
+			} else if (opBuscaSelecionada.equalsIgnoreCase("Rua")) {
+				// Chama o WebService em um AsyncTask para Paradas de acordo com
+				// a
+				// Rua digitado
+				// Passando link do WebService
+
+				new BuscarParadasWS().execute(ConexaoServidor
+						.getConexaoServidor().getLinkParadasPorRua()
+						+ DescricaoPesquisa.getText());
+
+				Log.d("LOG RUA ",
+						""
+								+ ConexaoServidor.getConexaoServidor()
+										.getLinkParadasPorRua()
+								+ DescricaoPesquisa.getText());
+			}
+		} else {
+			Toast.makeText(getApplicationContext(),
+					R.string.limite_minimo_de_caracteres, Toast.LENGTH_LONG)
+					.show();
+		}
 	}
 
 	private void mensagemConfirmacao() {
@@ -266,7 +309,7 @@ public class ParadaBuscarActivity extends Activity {
 	}
 
 	// Tarefa assincrona para realizar requisição e tratar retorno
-	class BuscarParadasWS extends AsyncTask<Void, Void, String> {
+	class BuscarParadasWS extends AsyncTask<String, Void, String> {
 
 		@Override
 		protected void onPreExecute() {
@@ -281,10 +324,11 @@ public class ParadaBuscarActivity extends Activity {
 		}
 
 		@Override
-		protected String doInBackground(Void... params) {
+		protected String doInBackground(String... params) {
+
 			// Passando link como parametro. getLink da class ConexãoServidor
-			return executarWebService(ConexaoServidor.getConexaoServidor()
-					.getLinkTodasParadas());
+			// params[0] recebe uma string co o link e passa para ao metodo.
+			return executarWebService(params[0]);
 		}
 
 		@Override
@@ -301,21 +345,19 @@ public class ParadaBuscarActivity extends Activity {
 						"Informações carregada com sucesso!",
 						Toast.LENGTH_SHORT).show();
 
-				// Enviando os dados para o ListView (Atualizando a tela)
-				listView.setAdapter(new ParadaAdapter(
-						ParadaBuscarActivity.this, arrayDados));
-
 			}
+
+			// Enviando os dados para o ListView (Atualizando a tela)
+			listView.setAdapter(new ParadaAdapter(ParadaBuscarActivity.this,
+					arrayDados));
 
 		}
 
 		// Executando o webservice para buscar informações no banco de dados.
-		private String executarWebService(String linkOnibus) {
+		private String executarWebService(String link) {
 			String result = null;
-			
 
-
-			result = getRESTFileContent(linkOnibus);
+			result = getRESTFileContent(link);
 
 			if (result == null) {
 				Log.e("Paradas", "Falha ao acessar WS");
@@ -326,29 +368,37 @@ public class ParadaBuscarActivity extends Activity {
 			}
 
 			try {
+
 				JSONObject json = new JSONObject(result);
-				StringBuffer sb = new StringBuffer();
+
 				JSONArray dadosArray = json.getJSONArray("parada");
 				JSONObject dadosJson;
 
 				// Se tem apenas um registro no banco
 				if (dadosArray.length() == 1) {
-					// for (int i = 0; i < pessoasArray.length(); i++) {
-					// pessoaJson = new JSONObject(pessoasArray.getString(i));
-					// sb.append("id=" + json.getLong("id"));
-					// sb.append("|descricao=" + json.getString("descricao"));
-					// sb.append('\n');
-					// Log.d("TesteWs", sb.toString());
+
+					Log.d("LOD TAMANHO JSON 2", "ENTROU OPÇÃO IF == 1");
+
+					parada = new Parada();
+
+					parada.set_id(json.getInt("id"));
+					parada.setDescricao(json.getString("descricao"));
+					parada.setLatitude(json.getString("latitude"));
+					parada.setLongitude(json.getString("longitude"));
+					parada.setBairro(json.getString("bairro"));
+					parada.setRua(json.getString("rua"));
+
+					arrayDados.add(parada);
 				}
 				// se tem mais de um registro no banco cria um array
 				else if (dadosArray.length() > 1) {
+					Log.d("LOD TAMANHO JSON 2", "ENTROU OPÇÃO IF > 1");
 
 					for (int i = 0; i < dadosArray.length(); i++) {
 						dadosJson = new JSONObject(dadosArray.getString(i));
 
 						parada = new Parada();
-						// newsData.set_id(Integer.parseInt(dadosJson.getString("id")))
-						// ;
+
 						parada.set_id(dadosJson.getInt("id"));
 						parada.setDescricao(dadosJson.getString("descricao"));
 						parada.setLatitude(dadosJson.getString("latitude"));
@@ -356,12 +406,11 @@ public class ParadaBuscarActivity extends Activity {
 						parada.setBairro(dadosJson.getString("bairro"));
 						parada.setRua(dadosJson.getString("rua"));
 
-						// parada.setRua(dadosJson.getString("rua"));
 						arrayDados.add(parada);
 
 					}
 				}
-				return sb.toString();
+				return "";
 
 			} catch (JSONException e) {
 				Log.e("Erro", "Erro no parsing do JSON", e);
