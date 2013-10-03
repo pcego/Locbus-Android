@@ -90,6 +90,7 @@ public class ParadaBuscarActivity extends Activity {
 						if (opBuscaSelecionada.equalsIgnoreCase("Todas")) {
 							DescricaoPesquisa.setEnabled(false);
 							DescricaoPesquisa.setHint("");
+							DescricaoPesquisa.setText("");
 						} else {
 							DescricaoPesquisa.setEnabled(true);
 							DescricaoPesquisa
@@ -126,43 +127,52 @@ public class ParadaBuscarActivity extends Activity {
 
 	}
 
-	public void btnBuscar(View v) {
-		//Verificando se tem no minimo 3 caracteres no campo de busca.
+	public Boolean validarCampoPesquisa() {
+		// Verificando se tem no minimo 3 caracteres no campo de busca.
 		if (DescricaoPesquisa.getText().length() >= 3) {
-			if (opBuscaSelecionada.equalsIgnoreCase("Todas")) {
-				// Chama o WebService em um AsyncTask para Todas as Paradas
-				// Passando link do WebService
-				new BuscarParadasWS().execute(ConexaoServidor
-						.getConexaoServidor().getLinkParadasTodas());
-
-			} else if (opBuscaSelecionada.equalsIgnoreCase("Bairro")) {
-				// Chama o WebService em um AsyncTask para Paradas de acordo com
-				// o
-				// Bairro digitado
-				// Passando link do WebService
-				new BuscarParadasWS().execute(ConexaoServidor
-						.getConexaoServidor().getLinkParadasPorBairro()
-						+ DescricaoPesquisa.getText());
-			} else if (opBuscaSelecionada.equalsIgnoreCase("Rua")) {
-				// Chama o WebService em um AsyncTask para Paradas de acordo com
-				// a
-				// Rua digitado
-				// Passando link do WebService
-
-				new BuscarParadasWS().execute(ConexaoServidor
-						.getConexaoServidor().getLinkParadasPorRua()
-						+ DescricaoPesquisa.getText());
-
-				Log.d("LOG RUA ",
-						""
-								+ ConexaoServidor.getConexaoServidor()
-										.getLinkParadasPorRua()
-								+ DescricaoPesquisa.getText());
-			}
+			return true;
 		} else {
+
 			Toast.makeText(getApplicationContext(),
 					R.string.limite_minimo_de_caracteres, Toast.LENGTH_LONG)
 					.show();
+			return false;
+		}
+
+	}
+
+	public void btnBuscar(View v) {
+		
+		//Limpar ListView
+		listView.clearTextFilter();
+		
+		if (opBuscaSelecionada.equalsIgnoreCase("Todas")) {
+			// Chama o WebService em um AsyncTask para Todas as Paradas
+			// Passando link do WebService
+			new BuscarParadasWS().execute(ConexaoServidor.getConexaoServidor()
+					.getLinkParadasTodas());
+
+		} else if (opBuscaSelecionada.equalsIgnoreCase("Bairro") && validarCampoPesquisa()) {
+			// Chama o WebService em um AsyncTask para Paradas de acordo com
+			// o
+			// Bairro digitado
+			// Passando link do WebService
+			new BuscarParadasWS().execute(ConexaoServidor.getConexaoServidor()
+					.getLinkParadasPorBairro() + DescricaoPesquisa.getText());
+		} else if (opBuscaSelecionada.equalsIgnoreCase("Rua") && validarCampoPesquisa()) {
+			// Chama o WebService em um AsyncTask para Paradas de acordo com
+			// a
+			// Rua digitado
+			// Passando link do WebService
+
+			new BuscarParadasWS().execute(ConexaoServidor.getConexaoServidor()
+					.getLinkParadasPorRua() + DescricaoPesquisa.getText());
+
+			Log.d("LOG RUA ",
+					""
+							+ ConexaoServidor.getConexaoServidor()
+									.getLinkParadasPorRua()
+							+ DescricaoPesquisa.getText());
 		}
 	}
 
@@ -338,7 +348,7 @@ public class ParadaBuscarActivity extends Activity {
 
 			if (arrayDados.isEmpty()) {
 				Toast.makeText(ParadaBuscarActivity.this,
-						"Nenhum registro encontrado!", Toast.LENGTH_SHORT)
+						"Nenhum registro encontrado!", Toast.LENGTH_LONG)
 						.show();
 			} else {
 				Toast.makeText(ParadaBuscarActivity.this,

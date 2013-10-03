@@ -19,7 +19,6 @@
     <string name="menu_onibus">Ônibus</string>
     <string name="menu_mapa">Mapa</string>
     <string name="menu_paradas">Paradas</string>
-    <string name="menu_linha">Linha</string>
     <string name="title_activity_onibus">Ônibus</string>
 
     <!-- Layout Mapa -->

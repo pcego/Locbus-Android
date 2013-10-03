@@ -1,44 +1,74 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MapaActivity" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onClick_tipo1"
-            android:text="tipo 1" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onClick_Satelite"
-            android:text="Satelite" />
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onClick_aki"
-            android:background="@android:drawable/ic_menu_manage" 
-            />
-    </LinearLayout>
     <fragment
-        
         android:id="@+id/mapa"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         class="com.google.android.gms.maps.MapFragment" />
 
-</LinearLayout>
+    <RadioGroup
+        android:id="@+id/radio_group_list_selector"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#80000000"
+        android:orientation="horizontal"
+        android:padding="4dp" >
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/common_signin_btn_icon_pressed_light"
+            android:gravity="center_horizontal|center_vertical"
+            android:onClick="onClick_tipo1"
+            android:textColor="@color/Verde" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="#aaa" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/common_signin_btn_text_dark"
+            android:gravity="center_horizontal|center_vertical"
+            android:onClick="onClick_Satelite"
+            android:textColor="@color/Preto" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="#aaa" />
+
+        <ImageButton
+            android:id="@+id/radioCategory"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:drawable/ic_menu_manage"
+            android:gravity="center_horizontal|center_vertical"
+            android:onClick="onClick_aki"
+            android:textColor="@color/Azul" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="#aaa" />
+
+        <Button
+            android:id="@+id/radioNearBy"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/common_signin_btn_icon_focus_light"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/Vermelho" />
+    </RadioGroup>
+
+</FrameLayout>

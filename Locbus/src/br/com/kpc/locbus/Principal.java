@@ -33,11 +33,6 @@ public class Principal extends Activity {
 		startActivity(i);
 	}
 
-	public void btnLinha(View v) {		
-		Toast.makeText(Principal.this, "LINHA", Toast.LENGTH_SHORT).show();
-//		Intent i = new Intent(getApplicationContext(), MapaActivity.class);
-//		startActivity(i);
-	}
 	public void btnMapa(View v) {		
 //		Toast.makeText(Principal.this, "mapa", Toast.LENGTH_SHORT).show();
 		Intent i = new Intent(getApplicationContext(), MapaActivity.class);
