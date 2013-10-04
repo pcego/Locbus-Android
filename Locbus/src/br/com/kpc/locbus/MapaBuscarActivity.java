@@ -48,15 +48,21 @@ public class MapaBuscarActivity extends Activity {
 	Linha linhas;
 
 	ListView lvLinhas;
-	ImageButton ibParada, ibLinhas;
+	ImageButton ibLinhas;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mapa_buscar);
-		ibLinhas = (ImageButton) findViewById(R.id.ibConsultarLinhas);
-		ibParada = (ImageButton) findViewById(R.id.ibConsultarParada);
+
+		// Limpamdo o array lsita de dados
+		arrayDados.clear();
+
+
 		lvLinhas = (ListView) findViewById(R.id.lvLinhas);
+
+		// Chama o WebService em um AsyncTask
+		new TodasAsLinhasWS().execute();
 
 		// Quando selecionar algum item da lista fazer...
 		lvLinhas.setOnItemClickListener(new OnItemClickListener() {
@@ -126,7 +132,7 @@ public class MapaBuscarActivity extends Activity {
 	}
 
 	// Tarefa assincrona para realizar requisição e tratar retorno
-	class TarefaWS extends AsyncTask<Void, Void, String> {
+	class TodasAsLinhasWS extends AsyncTask<Void, Void, String> {
 
 		@Override
 		protected void onPreExecute() {
@@ -155,7 +161,7 @@ public class MapaBuscarActivity extends Activity {
 				Toast.makeText(MapaBuscarActivity.this,
 						R.string.informacoes_carregada_com_sucesso,
 						Toast.LENGTH_SHORT).show();
-				
+
 				// Enviando os dados para o ListView (Atualizando a tela)
 				lvLinhas.setAdapter(new LinhasAdapter(MapaBuscarActivity.this,
 						arrayDados));
@@ -163,7 +169,6 @@ public class MapaBuscarActivity extends Activity {
 			}
 
 			progressDialog.dismiss();
-
 
 		}
 
@@ -210,10 +215,12 @@ public class MapaBuscarActivity extends Activity {
 						// ;
 						linhas.set_id(dadosJson.getInt("id"));
 						linhas.setHoraFinal(dadosJson.getString("horaFinal"));
-						linhas.setHoraInicial(dadosJson.getString("horaInicial"));	
+						linhas.setHoraInicial(dadosJson
+								.getString("horaInicial"));
 						linhas.setNumeroLinha(dadosJson.getInt("numeroLinha"));
 						linhas.setPontoFinal(dadosJson.getString("pontoFinal"));
-						linhas.setPontoInicial(dadosJson.getString("pontoInicial"));
+						linhas.setPontoInicial(dadosJson
+								.getString("pontoInicial"));
 						linhas.setStatus(dadosJson.getBoolean("status"));
 						linhas.setTipoLinha(dadosJson.getString("tipoLinha"));
 						arrayDados.add(linhas);
@@ -230,35 +237,6 @@ public class MapaBuscarActivity extends Activity {
 	}
 
 	// xxxxxxxxxxxxxxxx FIM CONSULTA WEB SERVICE
-
-	public void onClick_MapaConsultarLinha(View v) {
-		
-
-		ibParada.setVisibility(View.GONE);
-		ibLinhas.setVisibility(View.GONE);
-		lvLinhas.setVisibility(View.VISIBLE);
-		setTitle(R.string.selecione_uma_linha);
-		
-		// Limpamdo o array lsita de dados
-		arrayDados.clear();
-
-		// Chama o WebService em um AsyncTask
-		new TarefaWS().execute();
-
-
-	}
-
-	public void onClick_parada(View v) {
-		// criar a intent
-		Intent it = new Intent();
-		// seta o valor de retorno
-		it.putExtra("msg", "parada");
-		// seta o status do resultado e a intenet
-		// 1 - Onibus de determinada linha;
-		// 2 - Parada de Onibus mais proxima;
-		setResult(2, it);
-		finish();
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

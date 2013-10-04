@@ -207,13 +207,6 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	}
 
-	public void onClick_aki(View v) {
-
-		startActivityForResult(new Intent(this, MapaBuscarActivity.class),
-				RETORNO_MENU);
-
-	}
-
 	@Override
 	public void onLocationChanged(Location location) {
 		// Centraliza o mapa na coordenada atual
@@ -243,32 +236,46 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	}
 
+	/* Chamando a tela MapaConsultaLinha que retorna para o metodo
+	 * onActivityResult o (resultado == 1) para garantir que o usuario selecionou
+	 * alguma linha, junto ao mesmo vem o numero da linha que é feita a consulta
+	 * no web service.
+	*/
+	public void onClick_MapaConsultarLinha(View v) {	
+		startActivityForResult(new Intent(this, MapaBuscarActivity.class),
+				RETORNO_MENU);
+	}
+
+	
 	@Override
 	protected void onActivityResult(int codigo, int resultado, Intent itRetorno) {
 		super.onActivityResult(codigo, resultado, itRetorno);
 		// Retornos pode ser:
 		// 1 - Onibus de determinada linha;
-		// 2 - Parada de Onibus mais proxima;
 		// 0 - RETORNO_MENU operação cancelada.
 
-		String msg;
+		
 
 		// Retorno da opção do menu = 0
 		if (codigo == RETORNO_MENU) {
 			// 1 - Onibus de determinada linha;
 			if (resultado == 1) {
-
+				String msg = "";
 				msg = itRetorno.getStringExtra("numeroLinha");
-				Toast.makeText(this, "Linha selecionada: " + msg,
-						Toast.LENGTH_SHORT).show();
 				new VeiculosPorLinhaWS().execute(msg);
 
-			}// 2 - Parada de Onibus mais proxima;
-			else if (resultado == 2) {
-				// Chama o WebService em um AsyncTask
-				new TodasAsParadasWS().execute();
 			}
+
 		}
+	}
+
+	public void exibirTodasAsParadas(View v) {
+
+		// Parada de Onibus mais proxima;
+		// Chama o WebService em um AsyncTask
+		new TodasAsParadasWS().execute();
+
+
 	}
 
 	// Informe a Latitude e Longitude, Titulo, Icone do ponto.
@@ -482,7 +489,7 @@ public class MapaActivity extends Activity implements LocationListener {
 			String imei = params[0];
 			// Passando link como parametro. getLink da class ConexãoServidor
 			return executarWebServiceVeiculoPorLinha(ConexaoServidor
-					.getConexaoServidor().getLinkVeiculosPorLinha()+imei);
+					.getConexaoServidor().getLinkVeiculosPorLinha() + imei);
 		}
 
 		@Override
@@ -510,7 +517,7 @@ public class MapaActivity extends Activity implements LocationListener {
 		// Executando o webservice para buscar informações no banco de dados.
 		private String executarWebServiceVeiculoPorLinha(
 				String LinkVeiculosPorLinha) {
-			
+
 			String result = null;
 
 			result = getRESTFileContent(LinkVeiculosPorLinha);
@@ -619,8 +626,8 @@ public class MapaActivity extends Activity implements LocationListener {
 
 			try {
 
-				//Pode rira isso e deixa o result no JSONObject(result)
-				//testar depois
+				// Pode rira isso e deixa o result no JSONObject(result)
+				// testar depois
 				String json = result;
 				JSONObject o = new JSONObject(json);
 				String status = o.getString("id");

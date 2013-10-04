@@ -37,14 +37,14 @@
     <string name="btn_buscar">Ok</string>
     <string name="title_activity_onibus_infor_activyty">Informações sobre o Ônibus</string>
     <string name="title_activity_mapa">Mapa</string>
-    <string name="title_activity_mapa_buscar">O que você deseja buscar?</string>
+    <string name="title_activity_mapa_buscar">Selecione uma linha:</string>
     <string name="consulta_de_onibus_por_linha">Consulta de ônibus por linha:</string>
     <string name="hint_numero_da_linha">Numero da Linha</string>
     
     <!-- Layout Mapa Contulta Linha -->
     <string name="title_activity_mapa_consultar_linha">Consulta de Veículos por Linha</string>
     <string name="numero_da_linha">Numero da Linha</string>
-    <string name="selecione_uma_linha">Selecione uma linha:</string>
+
 
     <!-- Layout Parada Linha -->
     <string name="title_activity_parada_buscar">Buscar Paradas</string>

@@ -51,9 +51,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:drawable/ic_menu_manage"
+            android:background="@drawable/onibus"
             android:gravity="center_horizontal|center_vertical"
-            android:onClick="onClick_aki"
+            android:onClick="onClick_MapaConsultarLinha"
             android:textColor="@color/Azul" />
 
         <View
@@ -68,7 +68,8 @@
             android:layout_weight="1"
             android:background="@drawable/common_signin_btn_icon_focus_light"
             android:gravity="center_horizontal|center_vertical"
-            android:textColor="@color/Vermelho" />
+            android:textColor="@color/Vermelho" 
+            android:onClick="exibirTodasAsParadas"/>
     </RadioGroup>
 
 </FrameLayout>
