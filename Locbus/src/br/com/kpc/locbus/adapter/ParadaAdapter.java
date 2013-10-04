@@ -11,8 +11,8 @@ import android.widget.TextView;
 import br.com.kpc.locbus.R;
 import br.com.kpc.locbus.core.Parada;
 
-public class ParadaAdapter extends BaseAdapter{
-	
+public class ParadaAdapter extends BaseAdapter {
+
 	private ArrayList listData;
 	private LayoutInflater layoutInflater;
 
@@ -42,7 +42,8 @@ public class ParadaAdapter extends BaseAdapter{
 		if (convertView == null) {
 			convertView = layoutInflater.inflate(R.layout.itens_paradas, null);
 			objCarregador = new ViewHolder();
-			objCarregador.id = (TextView) convertView.findViewById(R.id.paradaTvid);
+			objCarregador.id = (TextView) convertView
+					.findViewById(R.id.paradaTvid);
 			objCarregador.descricao = (TextView) convertView
 					.findViewById(R.id.paradaTvDescricao);
 			objCarregador.endereco = (TextView) convertView
@@ -56,8 +57,8 @@ public class ParadaAdapter extends BaseAdapter{
 
 		objCarregador.id.setText(Integer.toString(parada.get_id()));
 		objCarregador.descricao.setText(parada.getDescricao());
-	//	objCarregador.endereco.setText(parada.getRua() +" - "+ parada.getBairro());
-			objCarregador.endereco.setText(parada.getLatitude());
+		objCarregador.endereco.setText(parada.getRua() + ", "
+				+ parada.getBairro());
 
 		return convertView;
 	}

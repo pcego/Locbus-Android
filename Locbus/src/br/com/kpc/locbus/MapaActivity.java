@@ -101,12 +101,10 @@ public class MapaActivity extends Activity implements LocationListener {
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapa))
 				.getMap();
 
-		// Habilitando a opção meu local no mapa
-		map.setMyLocationEnabled(true);
 
 		// Iniciando o mapa no centro de monetes claros
 		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 14);
 		map.animateCamera(update);
 
 		// Recebendo valor do activity Parada para ver no mapa
@@ -211,8 +209,8 @@ public class MapaActivity extends Activity implements LocationListener {
 	public void onLocationChanged(Location location) {
 		// Centraliza o mapa na coordenada atual
 		latLng = new LatLng(location.getLatitude(), location.getLongitude());
-		adicionarMarcador(latLng, "Meu Local", R.drawable.meu_local, false,
-				false);
+//		adicionarMarcador(latLng, "Meu Local", R.drawable.meu_local, false,
+//				false);
 
 	}
 
