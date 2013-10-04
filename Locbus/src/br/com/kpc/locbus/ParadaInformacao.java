@@ -27,8 +27,8 @@ public class ParadaInformacao extends Activity {
 		Bundle bundle = intent.getExtras();
 
 		tvDescricao.setText(bundle.getString("paradaDescricao"));
-		tvRua.setText(bundle.getString("paradaBairro"));
-		tvBairro.setText(bundle.getString("paradaRua"));
+		tvRua.setText(bundle.getString("paradaRua"));
+		tvBairro.setText(bundle.getString("paradaBairro"));
 
 		
 
