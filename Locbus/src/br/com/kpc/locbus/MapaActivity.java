@@ -120,7 +120,7 @@ public class MapaActivity extends Activity implements LocationListener {
 								.getString("LatitudeParada")),
 								Double.parseDouble(bundle
 										.getString("longitudeParada"))),
-						bundle.getString("DescricaoParada"), R.drawable.parada,
+						bundle.getString("DescricaoParada"), R.drawable.mapa_localizacao_parada,
 						true, false);
 			}
 
@@ -280,10 +280,16 @@ public class MapaActivity extends Activity implements LocationListener {
 	public void adicionarMarcador(LatLng latLng, String titulo, int icone,
 			boolean zoomNoLocal, boolean limparMapa) {
 
+//		// // Cria um marcador LOCAL ONDE ESTA
+//		Marker frameworkSystem = map.addMarker(new MarkerOptions()
+//				.position(latLng).title(titulo)
+//				.icon(BitmapDescriptorFactory.fromResource(icone)));
+		
+		
 		// // Cria um marcador LOCAL ONDE ESTA
 		Marker frameworkSystem = map.addMarker(new MarkerOptions()
 				.position(latLng).title(titulo)
-				.icon(BitmapDescriptorFactory.fromResource(icone)));
+				.icon(BitmapDescriptorFactory.fromResource(icone)) );
 
 		// Move a câmera para Framework System com zoom 15.
 		if (zoomNoLocal)
@@ -398,7 +404,7 @@ public class MapaActivity extends Activity implements LocationListener {
 						.position(l)
 						.title(p.get_id() + " - " + p.getDescricao())
 						.icon(BitmapDescriptorFactory
-								.fromResource(R.drawable.parada - 0)));
+								.fromResource(R.drawable.mapa_localizacao_parada - 0)));
 				// Move a câmera para Framework System com zoom 15.
 				// map.moveCamera(CameraUpdateFactory.newLatLngZoom(l, 17));
 
@@ -665,7 +671,7 @@ public class MapaActivity extends Activity implements LocationListener {
 						Double.parseDouble(longitude));
 
 				adicionarMarcador(latLngTemp, "Titulo",
-						R.drawable.icon_locacao, true, false);
+						R.drawable.mapa_localizacao_onibus, true, false);
 			}
 
 		}
@@ -757,7 +763,7 @@ public class MapaActivity extends Activity implements LocationListener {
 								Double.parseDouble(longitude));
 
 						adicionarMarcador(latLngTemp, "Titulo",
-								R.drawable.icon_locacao, true, false);
+								R.drawable.mapa_localizacao_onibus, true, false);
 
 					}
 				});

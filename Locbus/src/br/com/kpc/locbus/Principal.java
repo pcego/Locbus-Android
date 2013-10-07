@@ -2,8 +2,10 @@ package br.com.kpc.locbus;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -23,20 +25,56 @@ public class Principal extends Activity {
 		getMenuInflater().inflate(R.menu.principal, menu);
 		return true;
 	}
-	
+
 	public void btnOnibus(View v) {
-		Intent i = new Intent(getApplicationContext(), OnibusActivity.class);
-		startActivity(i);
-	}
-	public void btnParada(View v) {		
-		Intent i = new Intent(getApplicationContext(), ParadaBuscarActivity.class);
-		startActivity(i);
+		if (verificaConexao()) {
+			Intent i = new Intent(getApplicationContext(), OnibusActivity.class);
+			startActivity(i);
+		} else {
+			Toast.makeText(getApplicationContext(),
+					"Atenção!!! não existência conexão com a internet.",
+					Toast.LENGTH_LONG).show();
+		}
+
 	}
 
-	public void btnMapa(View v) {		
-//		Toast.makeText(Principal.this, "mapa", Toast.LENGTH_SHORT).show();
-		Intent i = new Intent(getApplicationContext(), MapaActivity.class);
-		startActivity(i);
+	public void btnParada(View v) {
+		if (verificaConexao()) {
+			Intent i = new Intent(getApplicationContext(),
+					ParadaBuscarActivity.class);
+			startActivity(i);
+		} else {
+			Toast.makeText(getApplicationContext(),
+					"Atenção!!! não existência conexão com a internet.",
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	public void btnMapa(View v) {
+		if (verificaConexao()) {
+			Intent i = new Intent(getApplicationContext(), MapaActivity.class);
+			startActivity(i);
+		} else {
+			Toast.makeText(getApplicationContext(),
+					"Atenção!!! não existência conexão com a internet.",
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	/*
+	 * Função para verificar existência de conexão com a internet
+	 */
+	public boolean verificaConexao() {
+		boolean conectado;
+		ConnectivityManager conectivtyManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (conectivtyManager.getActiveNetworkInfo() != null
+				&& conectivtyManager.getActiveNetworkInfo().isAvailable()
+				&& conectivtyManager.getActiveNetworkInfo().isConnected()) {
+			conectado = true;
+		} else {
+			conectado = false;
+		}
+		return conectado;
 	}
 
 }
