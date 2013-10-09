@@ -1,8 +1,13 @@
 package br.com.kpc.locbus.util;
 
+import br.com.kpc.locbus.R;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.widget.Toast;
+
 public class ConexaoServidor {
-	//Servidor casa       http://187.44.38.252
-	//Servidor restaurante http://187.44.47.206/
+	// Servidor casa http://187.44.38.252
+	// Servidor restaurante http://187.44.47.206/
 	// Link do web service
 	private final String linkVeiculosPorLinha = "http://187.44.47.206/locBus/rest/veiculos/buscaPorLinha/";
 	private final String linkParadasTodas = "http://187.44.47.206/locBus/rest/paradas/findAll";
@@ -11,9 +16,7 @@ public class ConexaoServidor {
 
 	private final String linkTodaslinhas = "http://187.44.47.206/locBus/rest/linhas/findAll/";
 	private final String linkUltimaPosicaoImei = "http://187.44.47.206/locBus/rest/posicoes/getUltimaPosicao/";
-	
-	
-	
+
 	public String getLinkVeiculosPorLinha() {
 		return linkVeiculosPorLinha;
 	}
@@ -30,8 +33,6 @@ public class ConexaoServidor {
 		return linkUltimaPosicaoImei;
 	}
 
-
-
 	public String getLinkParadasPorRua() {
 		return linkParadasPorRua;
 	}
@@ -39,8 +40,6 @@ public class ConexaoServidor {
 	public String getLinkParadasPorBairro() {
 		return linkParadasPorBairro;
 	}
-
-
 
 	private static ConexaoServidor conexaoServidor;
 
@@ -50,4 +49,23 @@ public class ConexaoServidor {
 		}
 		return conexaoServidor;
 	}
+
+	// Função para verificar existência de conexão com a internet
+	public static boolean verificaConexao(Context context) {
+		boolean conectado;
+		ConnectivityManager conectivtyManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		if (conectivtyManager.getActiveNetworkInfo() != null
+				&& conectivtyManager.getActiveNetworkInfo().isAvailable()
+				&& conectivtyManager.getActiveNetworkInfo().isConnected()) {
+			conectado = true;
+		} else {
+			conectado = false;
+			Toast.makeText(context.getApplicationContext(),
+					R.string.nao_existencia_internet, Toast.LENGTH_LONG).show();
+		}
+		return conectado;
+	}
+
 }

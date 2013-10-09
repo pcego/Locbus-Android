@@ -5,8 +5,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,7 +26,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +39,7 @@ import br.com.kpc.locbus.util.ConexaoServidor;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -54,12 +52,10 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	ListView listView;
 	// Array que vai armazenar os dados da consulta e coloca no List
-	private ArrayList arrayDados = new ArrayList();
+	private ArrayList<Parada> arrayDadosParada = new ArrayList<Parada>();
 
 	// private ArrayList<Veiculo> arrayDadosVeiculos = new ArrayList();
 	private List<Veiculo> arrayDadosVeiculos = new ArrayList<Veiculo>();
-
-	private ArrayList arrayUltimaPosicao = new ArrayList();
 
 	// Classe
 	private Parada parada;
@@ -101,8 +97,10 @@ public class MapaActivity extends Activity implements LocationListener {
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapa))
 				.getMap();
 
+		// Habilitando a opção meu local no mapa
+		map.setMyLocationEnabled(true);
 
-		// Iniciando o mapa no centro de monetes claros
+		// Iniciando o mapa no centro de montes claros
 		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 14);
 		map.animateCamera(update);
@@ -120,11 +118,27 @@ public class MapaActivity extends Activity implements LocationListener {
 								.getString("LatitudeParada")),
 								Double.parseDouble(bundle
 										.getString("longitudeParada"))),
-						bundle.getString("DescricaoParada"), R.drawable.mapa_localizacao_parada,
-						true, false);
+						bundle.getString("DescricaoParada"),
+						R.drawable.mapa_localizacao_parada, true, false);
 			}
 
 		}
+
+		// Ao clicar no marcador
+		map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+			public void onInfoWindowClick(Marker marker) {
+				Toast.makeText(getApplicationContext(),
+						"ToString" + marker.toString(), Toast.LENGTH_LONG)
+						.show();
+
+				Intent i = new Intent(getApplicationContext(),
+						MapaActivityInformacao.class);
+				i.putExtra("titulo", "" + marker.getTitle());
+				i.putExtra("id", "" + marker.getId());
+
+				startActivity(i);
+			}
+		});
 
 	}
 
@@ -133,7 +147,6 @@ public class MapaActivity extends Activity implements LocationListener {
 
 		LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-		// Verifica se o GPS está ativo
 		boolean statusGPS = service
 				.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
@@ -209,8 +222,8 @@ public class MapaActivity extends Activity implements LocationListener {
 	public void onLocationChanged(Location location) {
 		// Centraliza o mapa na coordenada atual
 		latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//		adicionarMarcador(latLng, "Meu Local", R.drawable.meu_local, false,
-//				false);
+		// adicionarMarcador(latLng, "Meu Local", R.drawable.meu_local, false,
+		// false);
 
 	}
 
@@ -234,25 +247,23 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	}
 
-	/* Chamando a tela MapaConsultaLinha que retorna para o metodo
-	 * onActivityResult o (resultado == 1) para garantir que o usuario selecionou
-	 * alguma linha, junto ao mesmo vem o numero da linha que é feita a consulta
-	 * no web service.
-	*/
-	public void onClick_MapaConsultarLinha(View v) {	
+	/*
+	 * Chamando a tela MapaConsultaLinha que retorna para o metodo
+	 * onActivityResult o (resultado == 1) para garantir que o usuario
+	 * selecionou alguma linha, junto ao mesmo vem o numero da linha que é feita
+	 * a consulta no web service.
+	 */
+	public void onClick_MapaConsultarLinha(View v) {
 		startActivityForResult(new Intent(this, MapaBuscarActivity.class),
 				RETORNO_MENU);
 	}
 
-	
 	@Override
 	protected void onActivityResult(int codigo, int resultado, Intent itRetorno) {
 		super.onActivityResult(codigo, resultado, itRetorno);
 		// Retornos pode ser:
 		// 1 - Onibus de determinada linha;
 		// 0 - RETORNO_MENU operação cancelada.
-
-		
 
 		// Retorno da opção do menu = 0
 		if (codigo == RETORNO_MENU) {
@@ -273,23 +284,21 @@ public class MapaActivity extends Activity implements LocationListener {
 		// Chama o WebService em um AsyncTask
 		new TodasAsParadasWS().execute();
 
-
 	}
 
 	// Informe a Latitude e Longitude, Titulo, Icone do ponto.
 	public void adicionarMarcador(LatLng latLng, String titulo, int icone,
 			boolean zoomNoLocal, boolean limparMapa) {
 
-//		// // Cria um marcador LOCAL ONDE ESTA
-//		Marker frameworkSystem = map.addMarker(new MarkerOptions()
-//				.position(latLng).title(titulo)
-//				.icon(BitmapDescriptorFactory.fromResource(icone)));
-		
-		
+		// // // Cria um marcador LOCAL ONDE ESTA
+		// Marker frameworkSystem = map.addMarker(new MarkerOptions()
+		// .position(latLng).title(titulo)
+		// .icon(BitmapDescriptorFactory.fromResource(icone)));
+
 		// // Cria um marcador LOCAL ONDE ESTA
 		Marker frameworkSystem = map.addMarker(new MarkerOptions()
 				.position(latLng).title(titulo)
-				.icon(BitmapDescriptorFactory.fromResource(icone)) );
+				.icon(BitmapDescriptorFactory.fromResource(icone)));
 
 		// Move a câmera para Framework System com zoom 15.
 		if (zoomNoLocal)
@@ -303,15 +312,6 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	// Declaração de Variaveis Global da Class
 	private ProgressDialog progressDialog;
-
-	// // Botão de carregar os dados
-	// public void btnWSClick() {
-	//
-	//
-	// // Chama o WebService em um AsyncTask
-	// new TarefaWS().execute();
-	//
-	// }
 
 	public byte[] getBytes(InputStream is) {
 		try {
@@ -360,7 +360,7 @@ public class MapaActivity extends Activity implements LocationListener {
 			super.onPreExecute();
 
 			// Limpamdo o array lsita de dados
-			arrayDados.clear();
+			arrayDadosParada.clear();
 
 			// Animação enquando executa o web service
 			progressDialog = ProgressDialog.show(MapaActivity.this, "Aguarde",
@@ -377,7 +377,7 @@ public class MapaActivity extends Activity implements LocationListener {
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			if (arrayDados.isEmpty()) {
+			if (arrayDadosParada.isEmpty()) {
 				Toast.makeText(MapaActivity.this,
 						"Nenhum registro encontrado!", Toast.LENGTH_SHORT)
 						.show();
@@ -389,24 +389,20 @@ public class MapaActivity extends Activity implements LocationListener {
 
 			progressDialog.dismiss();
 
-			// // Enviando os dados para o ListView (Atualizando a tela)
-			// listView.setAdapter(new OnibusAdapter(Paradas.this,
-			// arrayDados));
 			LatLng l;
-			Iterator<Parada> it = arrayDados.iterator();
+			Iterator<Parada> it = arrayDadosParada.iterator();
 			while (it.hasNext()) {
 				Parada p = it.next();
 
 				l = new LatLng(Double.parseDouble(p.getLatitude()),
 						Double.parseDouble(p.getLongitude()));
-				// // Cria um marcador
-				Marker frameworkSystem = map.addMarker(new MarkerOptions()
-						.position(l)
-						.title(p.get_id() + " - " + p.getDescricao())
-						.icon(BitmapDescriptorFactory
-								.fromResource(R.drawable.mapa_localizacao_parada - 0)));
-				// Move a câmera para Framework System com zoom 15.
-				// map.moveCamera(CameraUpdateFactory.newLatLngZoom(l, 17));
+				// Cria um marcador
+				Marker frameworkSystem = map
+						.addMarker(new MarkerOptions()
+								.position(l)
+								.title(p.get_id() + " - " + p.getDescricao())
+								.icon(BitmapDescriptorFactory
+										.fromResource(R.drawable.mapa_localizacao_parada - 0)));
 
 			}
 
@@ -448,15 +444,12 @@ public class MapaActivity extends Activity implements LocationListener {
 						dadosJson = new JSONObject(dadosArray.getString(i));
 
 						parada = new Parada();
-						// newsData.set_id(Integer.parseInt(dadosJson.getString("id")))
-						// ;
 						parada.set_id(dadosJson.getInt("id"));
 						parada.setDescricao(dadosJson.getString("descricao"));
 						parada.setLatitude(dadosJson.getString("latitude"));
 						parada.setLongitude(dadosJson.getString("longitude"));
-						// parada.setStatus(Boolean.parseBoolean("status"));
 
-						arrayDados.add(parada);
+						arrayDadosParada.add(parada);
 
 					}
 				}
@@ -480,7 +473,7 @@ public class MapaActivity extends Activity implements LocationListener {
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			// // Limpamdo o array lsita de dados
+			// Limpamdo o array lsita de dados
 			arrayDadosVeiculos.clear();
 
 			// Animação enquando executa o web service
@@ -564,13 +557,8 @@ public class MapaActivity extends Activity implements LocationListener {
 						veiculo.setDescricao(objetoJsonVeiculo
 								.getString("descricao"));
 						veiculo.setImei(objetoJsonVeiculo.getString("imei"));
-						// YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
 						arrayDadosVeiculos.add(veiculo);
 
-						Log.d("WebService veiculo nome ",
-								objetoJsonVeiculo.getString("descricao"));
-						Log.d("WebService veiculo ",
-								"" + arrayDadosVeiculos.size());
 					}
 				}
 				return sb.toString();
@@ -586,134 +574,18 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( ULTIMAS POSIÇÕES ) WEB SERVICE
 
-	Posicao posicao;
-
-	// Tarefa assincrona para realizar requisição e tratar retorno
-	class UltimaPosicaoWS extends AsyncTask<Void, Void, String> {
-
-		// Definindo e inicializando as variaveis como NULL
-		String idUltimaPosicao = null;
-		String latitude = null;
-		String longitude = null;
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-
-			// limpando array
-			arrayUltimaPosicao.clear();
-			// Limpamdo o mapa
-			map.clear();
-
-			// Animação enquando executa o web service
-			progressDialog = ProgressDialog.show(MapaActivity.this, "Aguarde",
-					"Ultima Posição processando...");
-		}
-
-		@Override
-		protected String doInBackground(Void... params) {
-
-			// Executando o webservice para buscar informações no banco de
-			// dados.
-			String result = null;
-			// Passando link como parametro. getLink da class ConexãoServidor
-			result = getRESTFileContent(ConexaoServidor.getConexaoServidor()
-					.getLinkUltimaPosicaoImei());
-
-			if (result == null) {
-				Log.e("Veiculos", "Falha ao acessar WS");
-				Toast.makeText(getApplicationContext(),
-						"Veiculo Falha ao acessar WS", Toast.LENGTH_SHORT)
-						.show();
-				return null;
-			}
-
-			try {
-
-				// Pode rira isso e deixa o result no JSONObject(result)
-				// testar depois
-				String json = result;
-				JSONObject o = new JSONObject(json);
-				String status = o.getString("id");
-
-				Log.d("KENNEDI TESTANDO ", "retorno " + status);
-				Log.d("KENNEDI TESTANDO ", o.getString("latitude"));
-				Log.d("KENNEDI TESTANDO ", o.getString("longitude"));
-
-				idUltimaPosicao = (o.getString("id"));
-				latitude = (o.getString("latitude"));
-				longitude = (o.getString("longitude"));
-
-			} catch (JSONException e) {
-				Log.e("Erro", "Erro no parsing do JSON", e);
-			}
-			return null;
-
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			progressDialog.dismiss();
-
-			if (latitude == null && longitude == null) {
-				Toast.makeText(MapaActivity.this,
-						"Nenhum registro encontrado!", Toast.LENGTH_SHORT)
-						.show();
-			} else {
-				Toast.makeText(MapaActivity.this,
-						"Informações carregada com sucesso!",
-						Toast.LENGTH_SHORT).show();
-
-				// Criando um marcador
-				LatLng latLngTemp;
-				latLngTemp = new LatLng(Double.parseDouble(latitude),
-						Double.parseDouble(longitude));
-
-				adicionarMarcador(latLngTemp, "Titulo",
-						R.drawable.mapa_localizacao_onibus, true, false);
-			}
-
-		}
-
-	}
-
-	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( ULTIMAS POSIÇÕES ) WEB SERVICE
-
 	// Definindo e inicializando as variaveis como NULL
 	String idUltimaPosicao = null;
 	String latitude = null;
 	String longitude = null;
 
-	// public void buscarPosicoes() {
-	// Iterator<Veiculo> it = arrayDadosVeiculos.listIterator();
-	// while (it.hasNext()) {
-	// veiculo = it.next();
-	//
-	// Log.d("LOOP dados veiculos",
-	// veiculo.get_id() + " " + veiculo.getDescricao() + " - ");
-	//
-	// }
-	//
-	// }
-
 	public void fazerAlgoDemorado() {
-
-		Log.d("Fazendo algo", "iniciando metodo");
-
-		// arrayDadosVeiculos = new ArrayList<Veiculo>();
 
 		veiculo = new Veiculo();
 		Iterator<Veiculo> it = arrayDadosVeiculos.listIterator();
-
-		// Log.d("verificando array", arrayDadosVeiculos.get(0).getImei());
-		// Log.d("verificando array", arrayDadosVeiculos.get(1).getImei());
-
 		while (it.hasNext()) {
 
-			// Log.d("Fazendo algo 1", veiculo.getImei());
 			veiculo = it.next();
-			Log.d("Fazendo algo 2", veiculo.getImei());
 
 			// Executando o webservice para buscar informações no banco de
 			// dados.
@@ -721,8 +593,6 @@ public class MapaActivity extends Activity implements LocationListener {
 			// Passando link como parametro. getLink da class ConexãoServidor
 			result = getRESTFileContent(ConexaoServidor.getConexaoServidor()
 					.getLinkUltimaPosicaoImei() + veiculo.getImei());
-
-			Log.d("Faz algo demorado", "Result " + result);
 
 			if (result == null) {
 				Log.e("Veiculos", "Falha ao acessar WS");
@@ -735,29 +605,20 @@ public class MapaActivity extends Activity implements LocationListener {
 
 					String json = result;
 					JSONObject o = new JSONObject(json);
-					String status = o.getString("id");
-
-					Log.d("KENNEDI TESTANDO ", "retorno " + status);
-					Log.d("KENNEDI TESTANDO ", o.getString("latitude"));
-					Log.d("KENNEDI TESTANDO ", o.getString("longitude"));
 
 					idUltimaPosicao = (o.getString("id"));
 					latitude = (o.getString("latitude"));
 					longitude = (o.getString("longitude"));
 
-					Log.d("KENNEDI TESTANDO ", "apos carregar variaveis");
-
 				} catch (JSONException e) {
 					Log.e("Erro", "Erro no parsing do JSON", e);
 				}
-				Log.d("KENNEDI TESTANDO ", "2 apos carregar variaveis");
 
 				// Criando um marcador
 				runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
 						LatLng latLngTemp;
 						latLngTemp = new LatLng(Double.parseDouble(latitude),
 								Double.parseDouble(longitude));
@@ -768,11 +629,8 @@ public class MapaActivity extends Activity implements LocationListener {
 					}
 				});
 			}
-			Log.d("KENNEDI TESTANDO ", "3 apos carregar variaveis");
 
 		}
-
-		Log.d("Fazendo algo", "fim do metodo");
 
 	}
 
@@ -784,6 +642,8 @@ public class MapaActivity extends Activity implements LocationListener {
 			fazerAlgoDemorado();
 		}
 	}
+
 	// FINALIZANDO THREADS NOVA
+	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( ULTIMAS POSIÇÕES ) WEB SERVICE
 
 }
