@@ -77,7 +77,7 @@
             android:label="@string/title_activity_parada_informacao" >
         </activity>
         <activity
-            android:name="br.com.kpc.locbus.MapaActivityInformacao"
+            android:name="br.com.kpc.locbus.MapaActivityInformacaoParada"
             android:label="@string/title_activity_mapa_activity_informacao" >
         </activity>
     </application>

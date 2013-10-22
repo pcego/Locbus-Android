@@ -17,6 +17,15 @@ public class ConexaoServidor {
 	private final String linkTodaslinhas = "http://187.44.47.206/locBus/rest/linhas/findAll/";
 	private final String linkUltimaPosicaoImei = "http://187.44.47.206/locBus/rest/posicoes/getUltimaPosicao/";
 
+	private final String linkInformacaoParada = "http://187.44.47.206/locBus/rest/linhas/getByParada/";
+	
+	
+	
+	
+	public String getLinkInformacaoParada() {
+		return linkInformacaoParada;
+	}
+
 	public String getLinkVeiculosPorLinha() {
 		return linkVeiculosPorLinha;
 	}

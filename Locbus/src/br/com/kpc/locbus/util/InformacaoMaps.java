@@ -13,7 +13,7 @@ public class InformacaoMaps implements LocationSource {
 
 	@Override
 	public void activate(OnLocationChangedListener listener) {
-		// A licalização foi ativa
+		// A localização foi ativa
 		this.listener = listener;
 
 	}

@@ -24,12 +24,13 @@
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:inputType="number" 
-            android:hint="@string/hint_numero_da_linha"/>
+            android:hint="@string/hint_numero_da_linha"
+            />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="btnWSClick"
+            android:onClick="btnOnibusWSClick"
             android:text="@string/btn_buscar" />
     </LinearLayout>
 

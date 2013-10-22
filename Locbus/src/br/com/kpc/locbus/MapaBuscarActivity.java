@@ -13,29 +13,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.kpc.locbus.OnibusActivity.TarefaWS;
-import br.com.kpc.locbus.adapter.LinhasAdapter;
-import br.com.kpc.locbus.adapter.OnibusAdapter;
-import br.com.kpc.locbus.core.Linha;
-import br.com.kpc.locbus.core.Veiculo;
-import br.com.kpc.locbus.util.ConexaoServidor;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+import br.com.kpc.locbus.adapter.LinhasAdapter;
+import br.com.kpc.locbus.core.Linha;
+import br.com.kpc.locbus.util.ConexaoServidor;
 
 public class MapaBuscarActivity extends Activity {
 

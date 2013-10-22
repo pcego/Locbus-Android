@@ -109,6 +109,7 @@ public class MapaActivity extends Activity implements LocationListener {
 		Intent intent = getIntent();
 		if (intent.getExtras() != null) {
 			Bundle bundle = intent.getExtras();
+
 			if (bundle.getString("idParada") != null) {
 				Toast.makeText(getApplicationContext(),
 						"Parada " + bundle.getString("DescricaoParada"),
@@ -118,8 +119,13 @@ public class MapaActivity extends Activity implements LocationListener {
 								.getString("LatitudeParada")),
 								Double.parseDouble(bundle
 										.getString("longitudeParada"))),
-						bundle.getString("DescricaoParada"),
+						"(P" + bundle.getString("idParada") + ") "
+								+ bundle.getString("DescricaoParada"),
 						R.drawable.mapa_localizacao_parada, true, false);
+			} else if (bundle.getString("numeroLinha") != null) {
+				new VeiculosPorLinhaWS().execute(bundle
+						.getString("numeroLinha"));
+
 			}
 
 		}
@@ -128,15 +134,26 @@ public class MapaActivity extends Activity implements LocationListener {
 		map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 			public void onInfoWindowClick(Marker marker) {
 				Toast.makeText(getApplicationContext(),
-						"ToString" + marker.toString(), Toast.LENGTH_LONG)
-						.show();
+						"entrou  " + marker.getTitle().substring(5),
+						Toast.LENGTH_LONG).show();
 
+				//Instanciando Intent
 				Intent i = new Intent(getApplicationContext(),
-						MapaActivityInformacao.class);
-				i.putExtra("titulo", "" + marker.getTitle());
-				i.putExtra("id", "" + marker.getId());
+						MapaActivityInformacaoParada.class);
+				i.putExtra("titulo", "" + marker.getTitle().substring(5));
 
+				
+				if (marker.getTitle().substring(1, 2).equals("P")) {
+					i.putExtra("tipo", "P");
+
+				} else if (marker.getTitle().substring(1, 2).equals("O")) {
+					i.putExtra("tipo", "O");
+
+				}
+
+				//Chama activity
 				startActivity(i);
+
 			}
 		});
 
@@ -211,8 +228,8 @@ public class MapaActivity extends Activity implements LocationListener {
 		map.animateCamera(update);
 	}
 
-	public void onClick_tipo1(View v) {
-		map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+	public void onClick_MeuLocal(View v) {
+		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 14);
 		map.animateCamera(update);
 
@@ -389,20 +406,15 @@ public class MapaActivity extends Activity implements LocationListener {
 
 			progressDialog.dismiss();
 
-			LatLng l;
 			Iterator<Parada> it = arrayDadosParada.iterator();
 			while (it.hasNext()) {
 				Parada p = it.next();
 
-				l = new LatLng(Double.parseDouble(p.getLatitude()),
-						Double.parseDouble(p.getLongitude()));
-				// Cria um marcador
-				Marker frameworkSystem = map
-						.addMarker(new MarkerOptions()
-								.position(l)
-								.title(p.get_id() + " - " + p.getDescricao())
-								.icon(BitmapDescriptorFactory
-										.fromResource(R.drawable.mapa_localizacao_parada - 0)));
+				adicionarMarcador(
+						new LatLng(Double.parseDouble(p.getLatitude()),
+								Double.parseDouble(p.getLongitude())),
+						"(P" + p.get_id() + ") " + p.getDescricao(),
+						R.drawable.mapa_localizacao_parada, true, false);
 
 			}
 
@@ -623,7 +635,8 @@ public class MapaActivity extends Activity implements LocationListener {
 						latLngTemp = new LatLng(Double.parseDouble(latitude),
 								Double.parseDouble(longitude));
 
-						adicionarMarcador(latLngTemp, "Titulo",
+						adicionarMarcador(latLngTemp, "(O" + veiculo.get_id()
+								+ ") " + veiculo.getDescricao(),
 								R.drawable.mapa_localizacao_onibus, true, false);
 
 					}
