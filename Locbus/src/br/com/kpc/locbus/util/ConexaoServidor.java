@@ -8,16 +8,18 @@ import android.widget.Toast;
 public class ConexaoServidor {
 	// Servidor casa http://187.44.38.252
 	// Servidor restaurante http://187.44.47.206/
+	
+	private final String ipServidor = "http://177.44.8.231";
+	
+
 	// Link do web service
-	private final String linkVeiculosPorLinha = "http://187.44.47.206/locBus/rest/veiculos/buscaPorLinha/";
-	private final String linkParadasTodas = "http://187.44.47.206/locBus/rest/paradas/findAll";
-	private final String linkParadasPorRua = "http://187.44.47.206/locBus/rest/paradas/getPorRua/";
-	private final String linkParadasPorBairro = "http://187.44.47.206/locBus/rest/paradas/getPorBairro/";
-
-	private final String linkTodaslinhas = "http://187.44.47.206/locBus/rest/linhas/findAll/";
-	private final String linkUltimaPosicaoImei = "http://187.44.47.206/locBus/rest/posicoes/getUltimaPosicao/";
-
-	private final String linkInformacaoParada = "http://187.44.47.206/locBus/rest/linhas/getByParada/";
+	private final String linkVeiculosPorLinha   = ipServidor + "/locBus/rest/veiculos/buscaPorLinha/";
+	private final String linkParadasTodas       = ipServidor + " /locBus/rest/paradas/findAll";
+	private final String linkParadasPorRua      = ipServidor + " /locBus/rest/paradas/getPorRua/";
+	private final String linkParadasPorBairro   = ipServidor + "/rest/paradas/getPorBairro/";
+	private final String linkTodaslinhas        = ipServidor + "/locBus/rest/linhas/findAll/";
+	private final String linkUltimaPosicaoImei  = ipServidor + "/locBus/rest/posicoes/getUltimaPosicao/";
+	private final String linkInformacaoParada   = ipServidor + "/locBus/rest/linhas/getByParada/";
 	
 	
 	
