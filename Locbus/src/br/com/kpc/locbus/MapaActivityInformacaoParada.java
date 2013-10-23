@@ -34,10 +34,10 @@ import android.widget.Toast;
 
 public class MapaActivityInformacaoParada extends Activity {
 
-
 	TextView titulo;
 	ListView listView;
 	Linha linha;
+	boolean verificarDados = false;
 
 	private ArrayList<Linha> arrayDadosLinha = new ArrayList<Linha>();
 
@@ -45,7 +45,6 @@ public class MapaActivityInformacaoParada extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mapa_activity_informacao_parada);
-
 
 		titulo = (TextView) findViewById(R.id.mapaInformacaoTitulo);
 		listView = (ListView) findViewById(R.id.mapaInformacaoListView);
@@ -131,7 +130,22 @@ public class MapaActivityInformacaoParada extends Activity {
 
 			// Passando link como parametro. getLink da class ConexãoServidor
 			// params[0] recebe uma string co o link e passa para ao metodo.
-			return executarWebService(params[0]);
+			if (verificarDados == false){
+				Log.d("verificando","metodo 1");
+				try {
+					return executarWebService(params[0]);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (arrayDadosLinha.isEmpty()){
+				Log.d("verificando","metodo 2");
+				return executarWebServiceSingleResult(params[0]);				
+			}
+			Log.d("verificando","metodo 3 null");
+			return null;
+			
 		}
 
 		@Override
@@ -157,11 +171,11 @@ public class MapaActivityInformacaoParada extends Activity {
 		}
 
 		// Executando o webservice para buscar informações no banco de dados.
-		private String executarWebService(String link) {
+		private String executarWebService(String link) throws JSONException {
 			String result = null;
 
 			result = getRESTFileContent(link);
-			
+
 			if (result == null) {
 				Log.e("Linha", "Falha ao acessar WS");
 				Toast.makeText(getApplicationContext(),
@@ -169,51 +183,82 @@ public class MapaActivityInformacaoParada extends Activity {
 				return null;
 			}
 
-			try {
+		//	try {
 
 				JSONObject json = new JSONObject(result);
 
 				JSONArray dadosArray = json.getJSONArray("linha");
 				JSONObject dadosJson;
 
-				// Se tem apenas um registro no banco
-				if (dadosArray.length() == 1) {
-
-					Log.d("LOD TAMANHO JSON 2", "ENTROU OPÇÃO IF == 1");
+				for (int i = 0; i < dadosArray.length(); i++) {
+					dadosJson = new JSONObject(dadosArray.getString(i));
 
 					linha = new Linha();
 
-					linha.set_id(json.getInt("id"));
-					linha.setHoraFinal(json.getString("horaFinal"));
-					linha.setHoraInicial(json.getString("horaInicial"));
-					linha.setNumeroLinha(json.getInt("numeroLinha"));
-					linha.setPontoFinal(json.getString("pontoFinal"));
-					linha.setPontoInicial(json.getString("pontoInicial"));
+					linha.set_id(dadosJson.getInt("id"));
+					linha.setHoraFinal(dadosJson.getString("horaFinal"));
+					linha.setHoraInicial(dadosJson.getString("horaInicial"));
+					linha.setNumeroLinha(dadosJson.getInt("numeroLinha"));
+					linha.setPontoFinal(dadosJson.getString("pontoFinal"));
+					linha.setPontoInicial(dadosJson.getString("pontoInicial"));
+					linha.setTipoLinha(dadosJson.getString("tipoLinha"));
 
 					arrayDadosLinha.add(linha);
+
 				}
-				// se tem mais de um registro no banco cria um array
-				else if (dadosArray.length() > 1) {
-					Log.d("LOD TAMANHO JSON 2", "ENTROU OPÇÃO IF > 1");
 
-					for (int i = 0; i < dadosArray.length(); i++) {
-						dadosJson = new JSONObject(dadosArray.getString(i));
-
-						linha = new Linha();
-
-						linha.set_id(dadosJson.getInt("id"));
-						linha.setHoraFinal(dadosJson.getString("horaFinal"));
-						linha.setHoraInicial(dadosJson.getString("horaInicial"));
-						linha.setNumeroLinha(dadosJson.getInt("numeroLinha"));
-						linha.setPontoFinal(dadosJson.getString("pontoFinal"));
-						linha.setPontoInicial(dadosJson
-								.getString("pontoInicial"));
-						linha.setTipoLinha(dadosJson.getString("tipoLinha"));
-
-						arrayDadosLinha.add(linha);
-
-					}
+				if (arrayDadosLinha.isEmpty()) {
+					verificarDados = false;
+					Log.d("verificando","false");
+				}else{
+					verificarDados = true;
+					Log.d("verificando","true");
 				}
+				return "";
+
+//			} catch (JSONException e) {
+//				Log.e("Erro", "Erro no parsing do JSON", e);
+//			}
+//			return null;
+		}
+
+		// Executando o webservice para buscar informações no banco de dados.
+		private String executarWebServiceSingleResult(String link) {
+			String result = null;
+			Log.d("verificando","entrou no outro metodo SingleResult");
+
+			result = getRESTFileContent(link);
+
+			if (result == null) {
+				Log.e("Linha", "Falha ao acessar WS");
+				Toast.makeText(getApplicationContext(),
+						"Linha Falha ao acessar WS", Toast.LENGTH_SHORT).show();
+				return null;
+			}
+			
+			try {
+				Log.d("verificando","Result: "+ result);
+
+				result = result.substring(9, result.length() -1);
+				
+				Log.d("verificando","Result: "+ result);
+				
+				JSONObject o = new JSONObject(result);
+
+				linha = new Linha();
+
+				linha.set_id(o.getInt("id"));
+				linha.setHoraFinal(o.getString("horaFinal"));
+				linha.setHoraInicial(o.getString("horaInicial"));
+				linha.setNumeroLinha(o.getInt("numeroLinha"));
+				linha.setPontoFinal(o.getString("pontoFinal"));
+				linha.setPontoInicial(o.getString("pontoInicial"));
+				linha.setTipoLinha(o.getString("tipoLinha"));
+
+				Log.d("TESTESINGLERESULT",
+						"num linha " + o.getString("pontoFinal"));
+				arrayDadosLinha.add(linha);
+
 				return "";
 
 			} catch (JSONException e) {
@@ -221,6 +266,7 @@ public class MapaActivityInformacaoParada extends Activity {
 			}
 			return null;
 		}
+
 	}
 
 	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( LINHAS POR PARADAS )WEB SERVICE
