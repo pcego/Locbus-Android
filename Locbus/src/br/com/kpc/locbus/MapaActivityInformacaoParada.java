@@ -34,8 +34,7 @@ import android.widget.Toast;
 
 public class MapaActivityInformacaoParada extends Activity {
 
-	TextView id;
-	TextView tipo;
+
 	TextView titulo;
 	ListView listView;
 	Linha linha;
@@ -47,8 +46,7 @@ public class MapaActivityInformacaoParada extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mapa_activity_informacao_parada);
 
-		id = (TextView) findViewById(R.id.mapaInformacaoID);
-		tipo = (TextView) findViewById(R.id.mapaInformacaoTipo);
+
 		titulo = (TextView) findViewById(R.id.mapaInformacaoTitulo);
 		listView = (ListView) findViewById(R.id.mapaInformacaoListView);
 
@@ -56,7 +54,6 @@ public class MapaActivityInformacaoParada extends Activity {
 
 			Bundle bundle = getIntent().getExtras();
 
-			tipo.setText(bundle.getString("tipo"));
 			titulo.setText(bundle.getString("titulo"));
 
 			new BuscarParadasWS().execute(ConexaoServidor.getConexaoServidor()

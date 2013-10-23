@@ -14,9 +14,9 @@ public class ConexaoServidor {
 
 	// Link do web service
 	private final String linkVeiculosPorLinha   = ipServidor + "/locBus/rest/veiculos/buscaPorLinha/";
-	private final String linkParadasTodas       = ipServidor + " /locBus/rest/paradas/findAll";
-	private final String linkParadasPorRua      = ipServidor + " /locBus/rest/paradas/getPorRua/";
-	private final String linkParadasPorBairro   = ipServidor + "/rest/paradas/getPorBairro/";
+	private final String linkParadasTodas       = ipServidor + "/locBus/rest/paradas/findAll";
+	private final String linkParadasPorRua      = ipServidor + "/locBus/rest/paradas/getPorRua/";
+	private final String linkParadasPorBairro   = ipServidor + "/locBus/rest/paradas/getPorBairro/";
 	private final String linkTodaslinhas        = ipServidor + "/locBus/rest/linhas/findAll/";
 	private final String linkUltimaPosicaoImei  = ipServidor + "/locBus/rest/posicoes/getUltimaPosicao/";
 	private final String linkInformacaoParada   = ipServidor + "/locBus/rest/linhas/getByParada/";

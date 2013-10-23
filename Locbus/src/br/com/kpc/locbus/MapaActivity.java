@@ -134,13 +134,13 @@ public class MapaActivity extends Activity implements LocationListener {
 		map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 			public void onInfoWindowClick(Marker marker) {
 				Toast.makeText(getApplicationContext(),
-						"entrou  " + marker.getTitle().substring(5),
+						"entrou  " + marker.getTitle().substring(4),
 						Toast.LENGTH_LONG).show();
 
 				//Instanciando Intent
 				Intent i = new Intent(getApplicationContext(),
 						MapaActivityInformacaoParada.class);
-				i.putExtra("titulo", "" + marker.getTitle().substring(5));
+				i.putExtra("titulo", marker.getTitle().substring(4));
 
 				
 				if (marker.getTitle().substring(1, 2).equals("P")) {
@@ -413,7 +413,7 @@ public class MapaActivity extends Activity implements LocationListener {
 				adicionarMarcador(
 						new LatLng(Double.parseDouble(p.getLatitude()),
 								Double.parseDouble(p.getLongitude())),
-						"(P" + p.get_id() + ") " + p.getDescricao(),
+						"(P) " + p.getDescricao(),
 						R.drawable.mapa_localizacao_parada, true, false);
 
 			}
@@ -635,8 +635,7 @@ public class MapaActivity extends Activity implements LocationListener {
 						latLngTemp = new LatLng(Double.parseDouble(latitude),
 								Double.parseDouble(longitude));
 
-						adicionarMarcador(latLngTemp, "(O" + veiculo.get_id()
-								+ ") " + veiculo.getDescricao(),
+						adicionarMarcador(latLngTemp, "(O) " + veiculo.getDescricao(),
 								R.drawable.mapa_localizacao_onibus, true, false);
 
 					}

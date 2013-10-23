@@ -38,7 +38,7 @@ public class OnibusActivity extends Activity {
 	private ProgressDialog progressDialog;
 	private EditText edtNumeroLinha;
 
-	ListView listView;
+	
 	// Array que vai armazenar os dados da consulta e coloca no List
 	ArrayList arrayDados = new ArrayList();
 	// Classe
@@ -50,34 +50,7 @@ public class OnibusActivity extends Activity {
 		setContentView(R.layout.onibus);
 
 		edtNumeroLinha = (EditText) findViewById(R.id.edtNumeroLinha);
-		listView = (ListView) findViewById(R.id.listOnibus);
 
-		// Quando selecionar algum item da lista fazer...
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position,
-					long id) {
-				Object o = listView.getItemAtPosition(position);
-				veiculo = (Veiculo) o;
-				Toast.makeText(OnibusActivity.this,
-						"Selecionado :" + " " + veiculo.getDescricao(),
-						Toast.LENGTH_SHORT).show();
-
-				// Passando Ônibus selecionado para Activity OnibusInfor
-				Bundle bundle = new Bundle();
-				bundle.putString("idOnibus", Integer.toString(veiculo.get_id()));
-				// Chamando a proxima tela
-				Intent i = new Intent(getApplicationContext(),
-						OnibusInforActivyty.class);
-				// Passando o Budle com o valor do id do onibus.
-				i.putExtras(bundle);
-				startActivity(i);
-				// Finalizando a tela.
-				finish();
-
-			}
-
-		});
 	}
 
 	// Botão de carregar os dados

@@ -4,103 +4,123 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-            <TextView
-        android:id="@+id/inforLinhaPorParadaID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ID:" />
-    
-    <TextView 
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/inforLinhaPorParadaNumeroLinha"
-        android:text="Numero:"/>
-    
-
-    <TextView
-        android:id="@+id/inforLinhaPorParadaTipo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text="Tipo:"/>
-
-
-    <LinearLayout 
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
         android:orientation="horizontal" >
-        
+
         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text="Hora Inicial: "/>
- 
-      <TextView
-        android:id="@+id/inforLinhaPorParadaHoraIni"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text=""/>
-        
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ID: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/inforLinhaPorParadaID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
-    <LinearLayout 
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
-        android:orientation="horizontal" >
-        
-        <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text="Hora Final: "/>
- 
-      <TextView
-        android:id="@+id/inforLinhaPorParadaHoraFim"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text=""/>
-        
-    </LinearLayout>    
 
-    
-    
-    
-    
-        <LinearLayout 
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal" >
-        
+
         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text="Ponto Inicial: "/>
- 
-      <TextView
-        android:id="@+id/inforLinhaPorParadaPontoIni"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text=""/>
-        
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Numero da Linha: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/inforLinhaPorParadaNumeroLinha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
-    
- <LinearLayout 
-        android:layout_height="match_parent"
+
+    <LinearLayout
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="horizontal" >
-        
+
         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text="Ponto Final: "/>
- 
-      <TextView
-        android:id="@+id/inforLinhaPorParadaPontoFim"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text=""/>
-        
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipo: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/inforLinhaPorParadaTipo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
-    
-    
-        
-            
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hora Inicial: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/inforLinhaPorParadaHoraIni"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hora Final: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/inforLinhaPorParadaHoraFim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ponto Inicial: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/inforLinhaPorParadaPontoIni"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ponto Final: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/inforLinhaPorParadaPontoFim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </LinearLayout>

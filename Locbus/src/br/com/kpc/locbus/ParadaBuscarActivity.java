@@ -142,24 +142,26 @@ public class ParadaBuscarActivity extends Activity {
 	}
 
 	public void btnBuscar(View v) {
-		
-		//Limpar ListView
+
+		// Limpar ListView
 		listView.clearTextFilter();
-		
+
 		if (opBuscaSelecionada.equalsIgnoreCase("Todas")) {
 			// Chama o WebService em um AsyncTask para Todas as Paradas
 			// Passando link do WebService
 			new BuscarParadasWS().execute(ConexaoServidor.getConexaoServidor()
 					.getLinkParadasTodas());
 
-		} else if (opBuscaSelecionada.equalsIgnoreCase("Bairro") && validarCampoPesquisa()) {
+		} else if (opBuscaSelecionada.equalsIgnoreCase("Bairro")
+				&& validarCampoPesquisa()) {
 			// Chama o WebService em um AsyncTask para Paradas de acordo com
 			// o
 			// Bairro digitado
 			// Passando link do WebService
 			new BuscarParadasWS().execute(ConexaoServidor.getConexaoServidor()
 					.getLinkParadasPorBairro() + DescricaoPesquisa.getText());
-		} else if (opBuscaSelecionada.equalsIgnoreCase("Rua") && validarCampoPesquisa()) {
+		} else if (opBuscaSelecionada.equalsIgnoreCase("Rua")
+				&& validarCampoPesquisa()) {
 			// Chama o WebService em um AsyncTask para Paradas de acordo com
 			// a
 			// Rua digitado
@@ -182,31 +184,26 @@ public class ParadaBuscarActivity extends Activity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		// define o titulo
-		builder.setTitle("Titulo");
-		// define a mensagem
-		builder.setMessage("Qualifique este software");
+		builder.setTitle("O que deseja fazer?");
+		// define a mensagem sub Titulo
+		// builder.setMessage("sub titulo");
+
 		// define um botão como positivo
 
 		builder.setPositiveButton("Informação",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface arg0, int arg1) {
 
-						// Passando outra Activyt o valor selecionado
-						Bundle bundle = new Bundle();
-
-						bundle.putString("paradaId",
-								Integer.toString(parada.get_id()));
-						bundle.putString("paradaDescricao",
-								parada.getDescricao());
-						bundle.putString("paradaBairro", parada.getBairro());
-						bundle.putString("paradaRua", parada.getRua());
-
-						// Chamando a proxima tela
+						// Instanciando Intent
 						Intent i = new Intent(getApplicationContext(),
-								ParadaInformacao.class);
-						// Passando o Budle com o valor do id.
-						i.putExtras(bundle);
+								MapaActivityInformacaoParada.class);
+						i.putExtra("titulo", parada.getDescricao());
+
+						i.putExtra("tipo", "P");
+
+						// Chama activity
 						startActivity(i);
+
 						// Finalizando a tela.
 						finish();
 

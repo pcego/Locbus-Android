@@ -190,24 +190,25 @@ containing a value of this type.
         public static final int common_signin_btn_text_normal_light=0x7f020015;
         public static final int common_signin_btn_text_pressed_dark=0x7f020016;
         public static final int common_signin_btn_text_pressed_light=0x7f020017;
-        public static final int ic_launcher=0x7f020018;
-        public static final int icon_locacao=0x7f020019;
-        public static final int mapa_localizacao_onibus=0x7f02001a;
-        public static final int mapa_localizacao_parada=0x7f02001b;
-        public static final int mapa_menu_1=0x7f02001c;
-        public static final int mapa_menu_onibus=0x7f02001d;
-        public static final int mapa_menu_parada=0x7f02001e;
-        public static final int mapa_menu_satelite=0x7f02001f;
-        public static final int menu_configuracao=0x7f020020;
-        public static final int menu_fundo=0x7f020021;
-        public static final int menu_mapa=0x7f020022;
-        public static final int menu_onibus=0x7f020023;
-        public static final int menu_paradas=0x7f020024;
-        public static final int meu_local=0x7f020025;
+        public static final int fundo=0x7f020018;
+        public static final int ic_launcher=0x7f020019;
+        public static final int icon_locacao=0x7f02001a;
+        public static final int mapa_localizacao_onibus=0x7f02001b;
+        public static final int mapa_localizacao_parada=0x7f02001c;
+        public static final int mapa_menu_1=0x7f02001d;
+        public static final int mapa_menu_onibus=0x7f02001e;
+        public static final int mapa_menu_parada=0x7f02001f;
+        public static final int mapa_menu_satelite=0x7f020020;
+        public static final int menu_configuracao=0x7f020021;
+        public static final int menu_fundo=0x7f020022;
+        public static final int menu_mapa=0x7f020023;
+        public static final int menu_onibus=0x7f020024;
+        public static final int menu_paradas=0x7f020025;
+        public static final int meu_local=0x7f020026;
     }
     public static final class id {
-        public static final int action_settings=0x7f050026;
-        public static final int edtNumeroLinha=0x7f05001e;
+        public static final int action_settings=0x7f050020;
+        public static final int edtNumeroLinha=0x7f05001c;
         public static final int hybrid=0x7f050004;
         public static final int inforLinhaPorParadaHoraFim=0x7f050009;
         public static final int inforLinhaPorParadaHoraIni=0x7f050008;
@@ -219,22 +220,17 @@ containing a value of this type.
         public static final int linhaTvDescricao=0x7f05000d;
         public static final int linhaTvNumeroLinha=0x7f05000e;
         public static final int linhatvId=0x7f05000c;
-        public static final int listOnibus=0x7f05001f;
-        public static final int lvLinhas=0x7f05001d;
+        public static final int lvLinhas=0x7f05001b;
         public static final int mapa=0x7f050015;
-        public static final int mapaInformacaoID=0x7f050019;
-        public static final int mapaInformacaoListView=0x7f05001c;
-        public static final int mapaInformacaoTipo=0x7f05001a;
-        public static final int mapaInformacaoTitulo=0x7f05001b;
+        public static final int mapaInformacaoListView=0x7f05001a;
+        public static final int mapaInformacaoTitulo=0x7f050019;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
-        public static final int paradaEdtDescricaoPesquisa=0x7f050022;
-        public static final int paradaLvLinhas=0x7f050023;
-        public static final int paradaSpOpcaoBusca=0x7f050021;
-        public static final int paradaTvBairro=0x7f050025;
+        public static final int paradaEdtDescricaoPesquisa=0x7f05001e;
+        public static final int paradaLvLinhas=0x7f05001f;
+        public static final int paradaSpOpcaoBusca=0x7f05001d;
         public static final int paradaTvDescricao=0x7f050013;
         public static final int paradaTvEndereco=0x7f050014;
-        public static final int paradaTvRua=0x7f050024;
         public static final int paradaTvid=0x7f050012;
         public static final int radioCategory=0x7f050017;
         public static final int radioNearBy=0x7f050018;
@@ -244,7 +240,6 @@ containing a value of this type.
         public static final int tvDescricao=0x7f050010;
         public static final int tvEmpresa=0x7f050011;
         public static final int tvId=0x7f05000f;
-        public static final int tvIdOnibus=0x7f050020;
     }
     public static final class layout {
         public static final int itens_informacao_linha_por_parada=0x7f030000;
@@ -256,10 +251,8 @@ containing a value of this type.
         public static final int mapa_buscar=0x7f030006;
         public static final int mapa_consultar_linha=0x7f030007;
         public static final int onibus=0x7f030008;
-        public static final int onibus_infor=0x7f030009;
-        public static final int parada_buscar=0x7f03000a;
-        public static final int parada_informacao=0x7f03000b;
-        public static final int principal=0x7f03000c;
+        public static final int parada_buscar=0x7f030009;
+        public static final int principal=0x7f03000a;
     }
     public static final class menu {
         public static final int mapa=0x7f0a0000;
