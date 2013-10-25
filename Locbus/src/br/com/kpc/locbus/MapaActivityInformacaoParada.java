@@ -3,7 +3,6 @@ package br.com.kpc.locbus;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -14,30 +13,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.kpc.locbus.ParadaBuscarActivity.BuscarParadasWS;
-import br.com.kpc.locbus.adapter.InformacaoLinhasPorParadaAdapter;
-import br.com.kpc.locbus.adapter.ParadaAdapter;
-import br.com.kpc.locbus.core.Linha;
-import br.com.kpc.locbus.core.Parada;
-import br.com.kpc.locbus.util.ConexaoServidor;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import br.com.kpc.locbus.adapter.InformacaoLinhasPorParadaAdapter;
+import br.com.kpc.locbus.core.Linha;
+import br.com.kpc.locbus.util.ConexaoServidor;
 
 public class MapaActivityInformacaoParada extends Activity {
 
 	TextView titulo;
 	ListView listView;
 	Linha linha;
-	boolean verificarDados = false;
 
 	private ArrayList<Linha> arrayDadosLinha = new ArrayList<Linha>();
 
@@ -130,119 +123,83 @@ public class MapaActivityInformacaoParada extends Activity {
 
 			// Passando link como parametro. getLink da class ConexãoServidor
 			// params[0] recebe uma string co o link e passa para ao metodo.
-			if (verificarDados == false){
-				Log.d("verificando","metodo 1");
-				try {
-					return executarWebService(params[0]);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (arrayDadosLinha.isEmpty()){
-				Log.d("verificando","metodo 2");
-				return executarWebServiceSingleResult(params[0]);				
-			}
-			Log.d("verificando","metodo 3 null");
-			return null;
-			
-		}
 
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			progressDialog.dismiss();
-
-			if (arrayDadosLinha.isEmpty()) {
-				Toast.makeText(MapaActivityInformacaoParada.this,
-						"Nenhum registro encontrado!", Toast.LENGTH_LONG)
-						.show();
-			} else {
-				Toast.makeText(MapaActivityInformacaoParada.this,
-						"Informações carregada com sucesso!",
-						Toast.LENGTH_SHORT).show();
-
-				// Enviando os dados para o ListView (Atualizando a tela)
-				listView.setAdapter(new InformacaoLinhasPorParadaAdapter(
-						MapaActivityInformacaoParada.this, arrayDadosLinha));
-
-			}
-
-		}
-
-		// Executando o webservice para buscar informações no banco de dados.
-		private String executarWebService(String link) throws JSONException {
-			String result = null;
-
-			result = getRESTFileContent(link);
-
-			if (result == null) {
-				Log.e("Linha", "Falha ao acessar WS");
-				Toast.makeText(getApplicationContext(),
-						"Linha Falha ao acessar WS", Toast.LENGTH_SHORT).show();
-				return null;
-			}
-
-		//	try {
-
-				JSONObject json = new JSONObject(result);
-
-				JSONArray dadosArray = json.getJSONArray("linha");
-				JSONObject dadosJson;
-
-				for (int i = 0; i < dadosArray.length(); i++) {
-					dadosJson = new JSONObject(dadosArray.getString(i));
-
-					linha = new Linha();
-
-					linha.set_id(dadosJson.getInt("id"));
-					linha.setHoraFinal(dadosJson.getString("horaFinal"));
-					linha.setHoraInicial(dadosJson.getString("horaInicial"));
-					linha.setNumeroLinha(dadosJson.getInt("numeroLinha"));
-					linha.setPontoFinal(dadosJson.getString("pontoFinal"));
-					linha.setPontoInicial(dadosJson.getString("pontoInicial"));
-					linha.setTipoLinha(dadosJson.getString("tipoLinha"));
-
-					arrayDadosLinha.add(linha);
-
-				}
-
-				if (arrayDadosLinha.isEmpty()) {
-					verificarDados = false;
-					Log.d("verificando","false");
-				}else{
-					verificarDados = true;
-					Log.d("verificando","true");
-				}
-				return "";
-
-//			} catch (JSONException e) {
-//				Log.e("Erro", "Erro no parsing do JSON", e);
-//			}
-//			return null;
-		}
-
-		// Executando o webservice para buscar informações no banco de dados.
-		private String executarWebServiceSingleResult(String link) {
-			String result = null;
-			Log.d("verificando","entrou no outro metodo SingleResult");
-
-			result = getRESTFileContent(link);
-
-			if (result == null) {
-				Log.e("Linha", "Falha ao acessar WS");
-				Toast.makeText(getApplicationContext(),
-						"Linha Falha ao acessar WS", Toast.LENGTH_SHORT).show();
-				return null;
-			}
-			
 			try {
-				Log.d("verificando","Result: "+ result);
+				executarWebService(params[0]);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-				result = result.substring(9, result.length() -1);
+			// Se arrayDadosLinha ainda estiver em BRANCO,
+			// e porque não encontrou varios resultado para o array.
+			// Então faz a busca para apenas um Registro.
+			if (arrayDadosLinha.isEmpty()) {
+
+				executarWebServiceSingleResult(params[0]);
+			}
+
+			return null;
+
+		}
+
+		// Executando o webservice para buscar informações no banco de dados.
+		// Metodo para Varios resultados.
+		private void executarWebService(String link) throws JSONException {
+			String result = null;
+
+			result = getRESTFileContent(link);
+
+			if (result == null) {
+				Log.e("Linha", "Falha ao acessar WS");
+				Toast.makeText(getApplicationContext(),
+						"Linha Falha ao acessar WS", Toast.LENGTH_SHORT).show();
+
+			}
+
+			JSONObject json = new JSONObject(result);
+
+			JSONArray dadosArray = json.getJSONArray("linha");
+			JSONObject dadosJson;
+
+			for (int i = 0; i < dadosArray.length(); i++) {
+				dadosJson = new JSONObject(dadosArray.getString(i));
+
+				linha = new Linha();
+
+				linha.set_id(dadosJson.getInt("id"));
+				linha.setHoraFinal(dadosJson.getString("horaFinal"));
+				linha.setHoraInicial(dadosJson.getString("horaInicial"));
+				linha.setNumeroLinha(dadosJson.getInt("numeroLinha"));
+				linha.setPontoFinal(dadosJson.getString("pontoFinal"));
+				linha.setPontoInicial(dadosJson.getString("pontoInicial"));
+				linha.setTipoLinha(dadosJson.getString("tipoLinha"));
+
+				arrayDadosLinha.add(linha);
+			}
+		}
+
+		// Executando o webservice para buscar informações no banco de dados.
+		// Metodo SINGLE RESULT
+		private void executarWebServiceSingleResult(String link) {
+			String result = null;
+		
+			result = getRESTFileContent(link);
+
+			if (result == null) {
+				Log.e("Linha", "Falha ao acessar WS");
+				Toast.makeText(getApplicationContext(),
+						"Linha Falha ao acessar WS", Toast.LENGTH_SHORT).show();
+			}
+
+			try {
+				Log.d("verificando", "Result: " + result);
+
 				
-				Log.d("verificando","Result: "+ result);
-				
+				result = result.substring(9, result.length() - 1);
+
+				Log.d("verificando", "Result: " + result);
+
 				JSONObject o = new JSONObject(result);
 
 				linha = new Linha();
@@ -255,16 +212,33 @@ public class MapaActivityInformacaoParada extends Activity {
 				linha.setPontoInicial(o.getString("pontoInicial"));
 				linha.setTipoLinha(o.getString("tipoLinha"));
 
-				Log.d("TESTESINGLERESULT",
-						"num linha " + o.getString("pontoFinal"));
 				arrayDadosLinha.add(linha);
-
-				return "";
 
 			} catch (JSONException e) {
 				Log.e("Erro", "Erro no parsing do JSON", e);
 			}
-			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+
+			progressDialog.dismiss();
+
+			if (arrayDadosLinha.isEmpty()) {
+				Toast.makeText(MapaActivityInformacaoParada.this,
+						R.string.nenhum_registro_encontrado, Toast.LENGTH_LONG)
+						.show();
+			} else {
+				Toast.makeText(MapaActivityInformacaoParada.this,
+						R.string.informacoes_carregada_com_sucesso,
+						Toast.LENGTH_SHORT).show();
+
+				// Enviando os dados para o ListView (Atualizando a tela)
+				listView.setAdapter(new InformacaoLinhasPorParadaAdapter(
+						MapaActivityInformacaoParada.this, arrayDadosLinha));
+			}
+
 		}
 
 	}

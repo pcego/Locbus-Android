@@ -133,26 +133,22 @@ public class MapaActivity extends Activity implements LocationListener {
 		// Ao clicar no marcador
 		map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 			public void onInfoWindowClick(Marker marker) {
-				Toast.makeText(getApplicationContext(),
-						"entrou  " + marker.getTitle().substring(4),
-						Toast.LENGTH_LONG).show();
-
+		
 				//Instanciando Intent
 				Intent i = new Intent(getApplicationContext(),
 						MapaActivityInformacaoParada.class);
-				i.putExtra("titulo", marker.getTitle().substring(4));
 
 				
 				if (marker.getTitle().substring(1, 2).equals("P")) {
+					i.putExtra("titulo", marker.getTitle().substring(4));
 					i.putExtra("tipo", "P");
+					//Chama activity
+					startActivity(i);
 
 				} else if (marker.getTitle().substring(1, 2).equals("O")) {
-					i.putExtra("tipo", "O");
-
+					//Se for Ônibus não vai fazer nada.
 				}
 
-				//Chama activity
-				startActivity(i);
 
 			}
 		});
@@ -396,11 +392,11 @@ public class MapaActivity extends Activity implements LocationListener {
 			super.onPostExecute(result);
 			if (arrayDadosParada.isEmpty()) {
 				Toast.makeText(MapaActivity.this,
-						"Nenhum registro encontrado!", Toast.LENGTH_SHORT)
+						R.string.nenhum_registro_encontrado, Toast.LENGTH_SHORT)
 						.show();
 			} else {
 				Toast.makeText(MapaActivity.this,
-						"Informações carregada com sucesso!",
+						R.string.informacoes_carregada_com_sucesso,
 						Toast.LENGTH_SHORT).show();
 			}
 
@@ -508,11 +504,11 @@ public class MapaActivity extends Activity implements LocationListener {
 
 			if (arrayDadosVeiculos.isEmpty()) {
 				Toast.makeText(MapaActivity.this,
-						"Nenhum registro encontrado!", Toast.LENGTH_SHORT)
+						R.string.nenhum_registro_encontrado, Toast.LENGTH_SHORT)
 						.show();
 			} else {
 				Toast.makeText(MapaActivity.this,
-						"Informações carregada com sucesso!",
+						R.string.informacoes_carregada_com_sucesso,
 						Toast.LENGTH_SHORT).show();
 
 				// Criando e iniciando a thread definida

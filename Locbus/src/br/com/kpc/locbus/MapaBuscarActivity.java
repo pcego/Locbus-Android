@@ -51,7 +51,6 @@ public class MapaBuscarActivity extends Activity {
 		// Limpamdo o array lsita de dados
 		arrayDados.clear();
 
-
 		lvLinhas = (ListView) findViewById(R.id.lvLinhas);
 
 		// Chama o WebService em um AsyncTask
@@ -131,6 +130,8 @@ public class MapaBuscarActivity extends Activity {
 		protected void onPreExecute() {
 			super.onPreExecute();
 
+			arrayDados.clear();
+
 			// Animação enquando executa o web service
 			progressDialog = ProgressDialog.show(MapaBuscarActivity.this,
 					"Aguarde", "processando...");
@@ -139,9 +140,98 @@ public class MapaBuscarActivity extends Activity {
 		@Override
 		protected String doInBackground(Void... params) {
 			// Passando link como parametro. getLink da class ConexãoServidor
-			return executarWebService(ConexaoServidor.getConexaoServidor()
-					.getLinkTodaslinhas());
+			try {
+				executarWebService(ConexaoServidor.getConexaoServidor()
+						.getLinkTodaslinhas());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			// Se arrayDadosLinha ainda estiver em BRANCO,
+			// e porque não encontrou varios resultado para o array.
+			// Então faz a busca para apenas um Registro.
+			if (arrayDados.isEmpty()) {
+				executarWebServiceSingleResult(ConexaoServidor.getConexaoServidor()
+						.getLinkTodaslinhas());
+			}
+
+			return null;
 		}
+
+		// Executando o webservice para buscar informações no banco de dados.
+		private void executarWebService(String linkOnibus) throws JSONException {
+			String result = null;
+
+			result = getRESTFileContent(linkOnibus);
+
+			if (result == null) {
+				Log.e("Onibus", "Falha ao acessar WS");
+				Toast.makeText(getApplicationContext(),
+						"Onibus Falha ao acessar WS", Toast.LENGTH_SHORT)
+						.show();
+			}
+				JSONObject json = new JSONObject(result);
+				StringBuffer sb = new StringBuffer();
+				JSONArray dadosArray = json.getJSONArray("linha");
+				JSONObject dadosJson;
+
+				for (int i = 0; i < dadosArray.length(); i++) {
+					dadosJson = new JSONObject(dadosArray.getString(i));
+
+					linhas = new Linha();
+
+					linhas.set_id(dadosJson.getInt("id"));
+					linhas.setHoraFinal(dadosJson.getString("horaFinal"));
+					linhas.setHoraInicial(dadosJson.getString("horaInicial"));
+					linhas.setNumeroLinha(dadosJson.getInt("numeroLinha"));
+					linhas.setPontoFinal(dadosJson.getString("pontoFinal"));
+					linhas.setPontoInicial(dadosJson.getString("pontoInicial"));
+					linhas.setStatus(dadosJson.getBoolean("status"));
+					linhas.setTipoLinha(dadosJson.getString("tipoLinha"));
+					arrayDados.add(linhas);
+
+				}
+		}
+		
+		// Executando o webservice para buscar informações no banco de dados.
+		// Metodo SINGLE RESULT
+		private void executarWebServiceSingleResult(String link) {
+			String result = null;
+		
+			result = getRESTFileContent(link);
+
+			if (result == null) {
+				Log.e("Linha", "Falha ao acessar WS");
+				Toast.makeText(getApplicationContext(),
+						"Linha Falha ao acessar WS", Toast.LENGTH_SHORT).show();
+			}
+
+			try {
+				Log.d("verificando", "Result: " + result);
+
+				
+				result = result.substring(9, result.length() - 1);
+
+				Log.d("verificando", "Result: " + result);
+
+				JSONObject o = new JSONObject(result);
+
+				linhas = new Linha();
+
+				linhas.set_id(o.getInt("id"));
+				linhas.setHoraFinal(o.getString("horaFinal"));
+				linhas.setHoraInicial(o.getString("horaInicial"));
+				linhas.setNumeroLinha(o.getInt("numeroLinha"));
+				linhas.setPontoFinal(o.getString("pontoFinal"));
+				linhas.setPontoInicial(o.getString("pontoInicial"));
+				linhas.setStatus(o.getBoolean("status"));
+				linhas.setTipoLinha(o.getString("tipoLinha"));
+				arrayDados.add(linhas);
+
+			} catch (JSONException e) {
+				Log.e("Erro", "Erro no parsing do JSON", e);
+			}
+		}
+
 
 		@Override
 		protected void onPostExecute(String result) {
@@ -158,74 +248,8 @@ public class MapaBuscarActivity extends Activity {
 				// Enviando os dados para o ListView (Atualizando a tela)
 				lvLinhas.setAdapter(new LinhasAdapter(MapaBuscarActivity.this,
 						arrayDados));
-
 			}
-
 			progressDialog.dismiss();
-
-		}
-
-		// Executando o webservice para buscar informações no banco de dados.
-		private String executarWebService(String linkOnibus) {
-			String result = null;
-
-			result = getRESTFileContent(linkOnibus);
-
-			if (result == null) {
-				Log.e("Onibus", "Falha ao acessar WS");
-				Toast.makeText(getApplicationContext(),
-						"Onibus Falha ao acessar WS", Toast.LENGTH_SHORT)
-						.show();
-				return null;
-			}
-
-			Log.d("Onibus", "acessou WS");
-			Log.d("retornou ", result);
-
-			try {
-				JSONObject json = new JSONObject(result);
-				StringBuffer sb = new StringBuffer();
-				JSONArray dadosArray = json.getJSONArray("linha");
-				JSONObject dadosJson;
-
-				// Se tem apenas um registro no banco
-				if (dadosArray.length() == 1) {
-					// for (int i = 0; i < pessoasArray.length(); i++) {
-					// pessoaJson = new JSONObject(pessoasArray.getString(i));
-					sb.append("id=" + json.getLong("id"));
-					sb.append("|descricao=" + json.getString("descricao"));
-					sb.append('\n');
-					Log.d("TesteWs", sb.toString());
-				}
-				// se tem mais de um registro no banco cria um array
-				else if (dadosArray.length() > 1) {
-
-					for (int i = 0; i < dadosArray.length(); i++) {
-						dadosJson = new JSONObject(dadosArray.getString(i));
-
-						linhas = new Linha();
-						// newsData.set_id(Integer.parseInt(dadosJson.getString("id")))
-						// ;
-						linhas.set_id(dadosJson.getInt("id"));
-						linhas.setHoraFinal(dadosJson.getString("horaFinal"));
-						linhas.setHoraInicial(dadosJson
-								.getString("horaInicial"));
-						linhas.setNumeroLinha(dadosJson.getInt("numeroLinha"));
-						linhas.setPontoFinal(dadosJson.getString("pontoFinal"));
-						linhas.setPontoInicial(dadosJson
-								.getString("pontoInicial"));
-						linhas.setStatus(dadosJson.getBoolean("status"));
-						linhas.setTipoLinha(dadosJson.getString("tipoLinha"));
-						arrayDados.add(linhas);
-
-					}
-				}
-				return sb.toString();
-
-			} catch (JSONException e) {
-				Log.e("Erro", "Erro no parsing do JSON", e);
-			}
-			return null;
 		}
 	}
 

@@ -37,6 +37,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import br.com.kpc.locbus.adapter.ParadaAdapter;
+import br.com.kpc.locbus.core.Linha;
 import br.com.kpc.locbus.core.Veiculo;
 import br.com.kpc.locbus.core.Parada;
 import br.com.kpc.locbus.util.ConexaoServidor;
@@ -52,7 +53,7 @@ public class ParadaBuscarActivity extends Activity {
 	// Array que vai armazenar os dados da consulta e coloca no List
 	ArrayList arrayDados = new ArrayList();
 	// Classe
-	Parada parada;
+	private Parada parada;
 
 	private String[] arrayOpcoesBusca;
 
@@ -71,7 +72,9 @@ public class ParadaBuscarActivity extends Activity {
 		// android, passando o ArrayList nomes
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_dropdown_item, arrayOpcoesBusca);
+
 		ArrayAdapter<String> spinnerArrayAdapter = arrayAdapter;
+
 		spinnerArrayAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_item);
 		spOpcaoBusca.setAdapter(spinnerArrayAdapter);
@@ -115,11 +118,6 @@ public class ParadaBuscarActivity extends Activity {
 				Object o = listView.getItemAtPosition(position);
 				parada = (Parada) o;
 				mensagemConfirmacao();
-				// Toast.makeText(ParadaBuscarActivity.this,
-				// "Selecionado :" + " " + parada.getDescricao(),
-				// Toast.LENGTH_SHORT)
-				// .show();
-				//
 
 			}
 
@@ -170,11 +168,6 @@ public class ParadaBuscarActivity extends Activity {
 			new BuscarParadasWS().execute(ConexaoServidor.getConexaoServidor()
 					.getLinkParadasPorRua() + DescricaoPesquisa.getText());
 
-			Log.d("LOG RUA ",
-					""
-							+ ConexaoServidor.getConexaoServidor()
-									.getLinkParadasPorRua()
-							+ DescricaoPesquisa.getText());
 		}
 	}
 
@@ -188,8 +181,7 @@ public class ParadaBuscarActivity extends Activity {
 		// define a mensagem sub Titulo
 		// builder.setMessage("sub titulo");
 
-		// define um botão como positivo
-
+		// Ação para o opção Informação
 		builder.setPositiveButton("Informação",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface arg0, int arg1) {
@@ -209,7 +201,7 @@ public class ParadaBuscarActivity extends Activity {
 
 					}
 				});
-
+		// Ação para a opção ver no mapa
 		builder.setNegativeButton("Ver no Mapa",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface arg0, int arg1) {
@@ -241,36 +233,6 @@ public class ParadaBuscarActivity extends Activity {
 		// Exibe
 		alerta.show();
 	}
-
-	// // Implementação do Menu da ListView
-	// //Adicionando opções de menu
-	// @Override
-	// public void onCreateContextMenu(ContextMenu menu, View v,
-	// ContextMenuInfo menuInfo) {
-	// // TODO Auto-generated method stub
-	// super.onCreateContextMenu(menu, v, menuInfo);
-	// menu.setHeaderTitle("O que deseja fazer?");
-	// menu.add(0, v.getId(), 0, "Informações");
-	// menu.add(0, v.getId(), 0, "Ver no Mapa");
-	// }
-	// // Implementação do Menu da ListView
-	// // Tratando a opção selecionada.
-	// @Override
-	// public boolean onContextItemSelected(MenuItem item) {
-	// // TODO Auto-generated method stub
-	// super.onContextItemSelected(item);
-	// if (item.getTitle() == "Informações") {
-	//
-	// Toast.makeText(this, "informação..", Toast.LENGTH_SHORT)
-	// .show();
-	//
-	// }
-	// else if(item.getTitle() == "Ver no Mapa"){
-	// Toast.makeText(this, "Opção ver no mapa", Toast.LENGTH_SHORT)
-	// .show();
-	// }
-	// return true;
-	// }
 
 	// xxxxxxxxxxxxxxxxx INICIANDO CONSULTA ( PARADAS ) WEB SERVICE
 
@@ -335,33 +297,28 @@ public class ParadaBuscarActivity extends Activity {
 
 			// Passando link como parametro. getLink da class ConexãoServidor
 			// params[0] recebe uma string co o link e passa para ao metodo.
-			return executarWebService(params[0]);
-		}
 
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			progressDialog.dismiss();
-
-			if (arrayDados.isEmpty()) {
-				Toast.makeText(ParadaBuscarActivity.this,
-						"Nenhum registro encontrado!", Toast.LENGTH_LONG)
-						.show();
-			} else {
-				Toast.makeText(ParadaBuscarActivity.this,
-						"Informações carregada com sucesso!",
-						Toast.LENGTH_SHORT).show();
-
+			try {
+				executarWebService(params[0]);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			// Enviando os dados para o ListView (Atualizando a tela)
-			listView.setAdapter(new ParadaAdapter(ParadaBuscarActivity.this,
-					arrayDados));
+			// Se arrayDadosLinha ainda estiver em BRANCO,
+			// e porque não encontrou varios resultado para o array.
+			// Então faz a busca para apenas um Registro.
+			if (arrayDados.isEmpty()) {
+
+				executarWebServiceSingleResult(params[0]);
+			}
+
+			return null;
 
 		}
 
 		// Executando o webservice para buscar informações no banco de dados.
-		private String executarWebService(String link) {
+		private void executarWebService(String link) throws JSONException {
 			String result = null;
 
 			result = getRESTFileContent(link);
@@ -371,58 +328,86 @@ public class ParadaBuscarActivity extends Activity {
 				Toast.makeText(getApplicationContext(),
 						"Paradas Falha ao acessar WS", Toast.LENGTH_SHORT)
 						.show();
-				return null;
+			}
+
+			JSONObject json = new JSONObject(result);
+
+			JSONArray dadosArray = json.getJSONArray("parada");
+			JSONObject dadosJson;
+
+			for (int i = 0; i < dadosArray.length(); i++) {
+				dadosJson = new JSONObject(dadosArray.getString(i));
+
+				parada = new Parada();
+
+				parada.set_id(dadosJson.getInt("id"));
+				parada.setDescricao(dadosJson.getString("descricao"));
+				parada.setLatitude(dadosJson.getString("latitude"));
+				parada.setLongitude(dadosJson.getString("longitude"));
+				parada.setBairro(dadosJson.getString("bairro"));
+				parada.setRua(dadosJson.getString("rua"));
+
+				arrayDados.add(parada);
+			}
+		}
+		
+		// Executando o webservice para buscar informações no banco de dados.
+		// Metodo SINGLE RESULT
+		private void executarWebServiceSingleResult(String link) {
+			String result = null;
+
+			result = getRESTFileContent(link);
+
+			if (result == null) {
+				Toast.makeText(getApplicationContext(),
+						"Linha Falha ao acessar WS", Toast.LENGTH_SHORT).show();
 			}
 
 			try {
 
-				JSONObject json = new JSONObject(result);
+				//Corta o link transformando em Json de um Objeto
+				// Remove a parte {"parada":[  e o final }
+				result = result.substring(10, result.length() - 1);
 
-				JSONArray dadosArray = json.getJSONArray("parada");
-				JSONObject dadosJson;
+				JSONObject o = new JSONObject(result);
+				
+				parada = new Parada();
 
-				// Se tem apenas um registro no banco
-				if (dadosArray.length() == 1) {
+				parada.set_id(o.getInt("id"));
+				parada.setDescricao(o.getString("descricao"));
+				parada.setLatitude(o.getString("latitude"));
+				parada.setLongitude(o.getString("longitude"));
+				parada.setBairro(o.getString("bairro"));
+				parada.setRua(o.getString("rua"));
 
-					Log.d("LOD TAMANHO JSON 2", "ENTROU OPÇÃO IF == 1");
-
-					parada = new Parada();
-
-					parada.set_id(json.getInt("id"));
-					parada.setDescricao(json.getString("descricao"));
-					parada.setLatitude(json.getString("latitude"));
-					parada.setLongitude(json.getString("longitude"));
-					parada.setBairro(json.getString("bairro"));
-					parada.setRua(json.getString("rua"));
-
-					arrayDados.add(parada);
-				}
-				// se tem mais de um registro no banco cria um array
-				else if (dadosArray.length() > 1) {
-					Log.d("LOD TAMANHO JSON 2", "ENTROU OPÇÃO IF > 1");
-
-					for (int i = 0; i < dadosArray.length(); i++) {
-						dadosJson = new JSONObject(dadosArray.getString(i));
-
-						parada = new Parada();
-
-						parada.set_id(dadosJson.getInt("id"));
-						parada.setDescricao(dadosJson.getString("descricao"));
-						parada.setLatitude(dadosJson.getString("latitude"));
-						parada.setLongitude(dadosJson.getString("longitude"));
-						parada.setBairro(dadosJson.getString("bairro"));
-						parada.setRua(dadosJson.getString("rua"));
-
-						arrayDados.add(parada);
-
-					}
-				}
-				return "";
+				arrayDados.add(parada);
 
 			} catch (JSONException e) {
 				Log.e("Erro", "Erro no parsing do JSON", e);
 			}
-			return null;
+		}
+
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			progressDialog.dismiss();
+
+			if (arrayDados.isEmpty()) {
+				Toast.makeText(ParadaBuscarActivity.this,
+						R.string.nenhum_registro_encontrado, Toast.LENGTH_LONG)
+						.show();
+			} else {
+				Toast.makeText(ParadaBuscarActivity.this,
+						R.string.informacoes_carregada_com_sucesso,
+						Toast.LENGTH_SHORT).show();
+
+			}
+
+			// Enviando os dados para o ListView (Atualizando a tela)
+			listView.setAdapter(new ParadaAdapter(ParadaBuscarActivity.this,
+					arrayDados));
+
 		}
 	}
 

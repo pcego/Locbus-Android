@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 public class ConexaoServidor {
 	// Servidor casa http://187.44.38.252
-	// Servidor restaurante http://187.44.47.206/
+	// Servidor restaurante http://187.44.47.206 Antigo
 	
 	private final String ipServidor = "http://177.44.8.231";
 	
