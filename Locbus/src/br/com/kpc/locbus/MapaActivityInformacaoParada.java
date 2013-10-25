@@ -183,39 +183,37 @@ public class MapaActivityInformacaoParada extends Activity {
 		// Metodo SINGLE RESULT
 		private void executarWebServiceSingleResult(String link) {
 			String result = null;
-		
+
 			result = getRESTFileContent(link);
 
 			if (result == null) {
-				Log.e("Linha", "Falha ao acessar WS");
-				Toast.makeText(getApplicationContext(),
-						"Linha Falha ao acessar WS", Toast.LENGTH_SHORT).show();
-			}
+				// Nenhum resultado encontrado
+			} else {
 
-			try {
-				Log.d("verificando", "Result: " + result);
+				try {
+					Log.d("verificando", "Result: " + result);
 
-				
-				result = result.substring(9, result.length() - 1);
+					result = result.substring(9, result.length() - 1);
 
-				Log.d("verificando", "Result: " + result);
+					Log.d("verificando", "Result: " + result);
 
-				JSONObject o = new JSONObject(result);
+					JSONObject o = new JSONObject(result);
 
-				linha = new Linha();
+					linha = new Linha();
 
-				linha.set_id(o.getInt("id"));
-				linha.setHoraFinal(o.getString("horaFinal"));
-				linha.setHoraInicial(o.getString("horaInicial"));
-				linha.setNumeroLinha(o.getInt("numeroLinha"));
-				linha.setPontoFinal(o.getString("pontoFinal"));
-				linha.setPontoInicial(o.getString("pontoInicial"));
-				linha.setTipoLinha(o.getString("tipoLinha"));
+					linha.set_id(o.getInt("id"));
+					linha.setHoraFinal(o.getString("horaFinal"));
+					linha.setHoraInicial(o.getString("horaInicial"));
+					linha.setNumeroLinha(o.getInt("numeroLinha"));
+					linha.setPontoFinal(o.getString("pontoFinal"));
+					linha.setPontoInicial(o.getString("pontoInicial"));
+					linha.setTipoLinha(o.getString("tipoLinha"));
 
-				arrayDadosLinha.add(linha);
+					arrayDadosLinha.add(linha);
 
-			} catch (JSONException e) {
-				Log.e("Erro", "Erro no parsing do JSON", e);
+				} catch (JSONException e) {
+					Log.e("Erro", "Erro no parsing do JSON", e);
+				}
 			}
 		}
 

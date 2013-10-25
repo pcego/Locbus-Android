@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
+import br.com.kpc.locbus.core.Linha;
 import br.com.kpc.locbus.core.Parada;
 import br.com.kpc.locbus.core.Posicao;
 import br.com.kpc.locbus.core.Veiculo;
@@ -133,23 +134,18 @@ public class MapaActivity extends Activity implements LocationListener {
 		// Ao clicar no marcador
 		map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 			public void onInfoWindowClick(Marker marker) {
-		
-				//Instanciando Intent
+
+				// Instanciando Intent
 				Intent i = new Intent(getApplicationContext(),
 						MapaActivityInformacaoParada.class);
 
-				
 				if (marker.getTitle().substring(1, 2).equals("P")) {
 					i.putExtra("titulo", marker.getTitle().substring(4));
 					i.putExtra("tipo", "P");
-					//Chama activity
+					// Chama activity
 					startActivity(i);
 
-				} else if (marker.getTitle().substring(1, 2).equals("O")) {
-					//Se for Ônibus não vai fazer nada.
 				}
-
-
 			}
 		});
 
@@ -408,8 +404,8 @@ public class MapaActivity extends Activity implements LocationListener {
 
 				adicionarMarcador(
 						new LatLng(Double.parseDouble(p.getLatitude()),
-								Double.parseDouble(p.getLongitude())),
-						"(P) " + p.getDescricao(),
+								Double.parseDouble(p.getLongitude())), "(P) "
+								+ p.getDescricao(),
 						R.drawable.mapa_localizacao_parada, true, false);
 
 			}
@@ -422,49 +418,51 @@ public class MapaActivity extends Activity implements LocationListener {
 
 			result = getRESTFileContent(linkOnibus);
 
-			if (result == null) {
-				Log.e("Paradas", "Falha ao acessar WS");
-				Toast.makeText(getApplicationContext(),
-						"Paradas Falha ao acessar WS", Toast.LENGTH_SHORT)
-						.show();
+			if (result.equals("null")) {
+				// Nenhum resultado encontrado
 				return null;
-			}
+			} else {
 
-			try {
-				JSONObject json = new JSONObject(result);
-				StringBuffer sb = new StringBuffer();
-				JSONArray dadosArray = json.getJSONArray("parada");
-				JSONObject dadosJson;
+				try {
+					JSONObject json = new JSONObject(result);
+					StringBuffer sb = new StringBuffer();
+					JSONArray dadosArray = json.getJSONArray("parada");
+					JSONObject dadosJson;
 
-				// Se tem apenas um registro no banco
-				if (dadosArray.length() == 1) {
-					// for (int i = 0; i < pessoasArray.length(); i++) {
-					// pessoaJson = new JSONObject(pessoasArray.getString(i));
-					// sb.append("id=" + json.getLong("id"));
-					// sb.append("|descricao=" + json.getString("descricao"));
-					// sb.append('\n');
-					// Log.d("TesteWs", sb.toString());
-				}
-				// se tem mais de um registro no banco cria um array
-				else if (dadosArray.length() > 1) {
-
-					for (int i = 0; i < dadosArray.length(); i++) {
-						dadosJson = new JSONObject(dadosArray.getString(i));
-
-						parada = new Parada();
-						parada.set_id(dadosJson.getInt("id"));
-						parada.setDescricao(dadosJson.getString("descricao"));
-						parada.setLatitude(dadosJson.getString("latitude"));
-						parada.setLongitude(dadosJson.getString("longitude"));
-
-						arrayDadosParada.add(parada);
-
+					// Se tem apenas um registro no banco
+					if (dadosArray.length() == 1) {
+						// for (int i = 0; i < pessoasArray.length(); i++) {
+						// pessoaJson = new
+						// JSONObject(pessoasArray.getString(i));
+						// sb.append("id=" + json.getLong("id"));
+						// sb.append("|descricao=" +
+						// json.getString("descricao"));
+						// sb.append('\n');
+						// Log.d("TesteWs", sb.toString());
 					}
-				}
-				return sb.toString();
+					// se tem mais de um registro no banco cria um array
+					else if (dadosArray.length() > 1) {
 
-			} catch (JSONException e) {
-				Log.e("Erro", "Erro no parsing do JSON", e);
+						for (int i = 0; i < dadosArray.length(); i++) {
+							dadosJson = new JSONObject(dadosArray.getString(i));
+
+							parada = new Parada();
+							parada.set_id(dadosJson.getInt("id"));
+							parada.setDescricao(dadosJson
+									.getString("descricao"));
+							parada.setLatitude(dadosJson.getString("latitude"));
+							parada.setLongitude(dadosJson
+									.getString("longitude"));
+
+							arrayDadosParada.add(parada);
+
+						}
+					}
+					return sb.toString();
+
+				} catch (JSONException e) {
+					Log.e("Erro", "Erro no parsing do JSON", e);
+				}
 			}
 			return null;
 		}
@@ -493,8 +491,23 @@ public class MapaActivity extends Activity implements LocationListener {
 		protected String doInBackground(String... params) {
 			String imei = params[0];
 			// Passando link como parametro. getLink da class ConexãoServidor
-			return executarWebServiceVeiculoPorLinha(ConexaoServidor
-					.getConexaoServidor().getLinkVeiculosPorLinha() + imei);
+			try {
+				executarWebServiceVeiculoPorLinha(ConexaoServidor
+						.getConexaoServidor().getLinkVeiculosPorLinha() + imei);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// Se arrayDadosLinha ainda estiver em BRANCO,
+			// e porque não encontrou varios resultado para o array.
+			// Então faz a busca para apenas um Registro.
+			if (arrayDadosVeiculos.isEmpty()) {
+
+				executarWebServiceSingleResult(ConexaoServidor
+						.getConexaoServidor().getLinkVeiculosPorLinha() + imei);
+			}
+			return null;
 		}
 
 		@Override
@@ -520,62 +533,77 @@ public class MapaActivity extends Activity implements LocationListener {
 		}
 
 		// Executando o webservice para buscar informações no banco de dados.
-		private String executarWebServiceVeiculoPorLinha(
-				String LinkVeiculosPorLinha) {
+		private void executarWebServiceVeiculoPorLinha(
+				String LinkVeiculosPorLinha) throws JSONException {
 
 			String result = null;
 
 			result = getRESTFileContent(LinkVeiculosPorLinha);
 
-			if (result == null) {
-				Log.e("Veiculos", "Falha ao acessar WS");
-				Toast.makeText(getApplicationContext(),
-						"Veiculo Falha ao acessar WS", Toast.LENGTH_SHORT)
-						.show();
-				return null;
-			}
+			if (result.equalsIgnoreCase("null")) {
+				// Nenhum resultado encontrado
 
-			try {
+			} else {
+
 				JSONObject json = new JSONObject(result);
-				StringBuffer sb = new StringBuffer();
 				JSONArray arrayJsonVeiculo = json.getJSONArray("veiculo");
 				JSONObject objetoJsonVeiculo;
 
-				// Se tem apenas um registro no banco
-				if (arrayJsonVeiculo.length() == 1) {
-					// for (int i = 0; i < pessoasArray.length(); i++) {
-					// pessoaJson = new JSONObject(pessoasArray.getString(i));
-					// sb.append("id=" + json.getLong("id"));
-					// sb.append("|descricao=" + json.getString("descricao"));
-					// sb.append('\n');
-					// Log.d("TesteWs", sb.toString());
-				}
 				// se tem mais de um registro no banco cria um array
-				else if (arrayJsonVeiculo.length() > 1) {
 
-					arrayDadosVeiculos.clear();
+				arrayDadosVeiculos.clear();
 
-					for (int i = 0; i < arrayJsonVeiculo.length(); i++) {
-						objetoJsonVeiculo = new JSONObject(
-								arrayJsonVeiculo.getString(i));
+				for (int i = 0; i < arrayJsonVeiculo.length(); i++) {
+					objetoJsonVeiculo = new JSONObject(
+							arrayJsonVeiculo.getString(i));
 
-						veiculo = new Veiculo();
+					veiculo = new Veiculo();
 
-						veiculo.set_id(objetoJsonVeiculo.getInt("id"));
-						veiculo.setDescricao(objetoJsonVeiculo
-								.getString("descricao"));
-						veiculo.setImei(objetoJsonVeiculo.getString("imei"));
-						arrayDadosVeiculos.add(veiculo);
+					veiculo.set_id(objetoJsonVeiculo.getInt("id"));
+					veiculo.setDescricao(objetoJsonVeiculo
+							.getString("descricao"));
+					veiculo.setImei(objetoJsonVeiculo.getString("imei"));
+					arrayDadosVeiculos.add(veiculo);
 
-					}
 				}
-				return sb.toString();
 
-			} catch (JSONException e) {
-				Log.e("Erro", "Erro no parsing do JSON", e);
 			}
-			return null;
+
 		}
+
+		// Executando o webservice para buscar informações no banco de dados.
+		// Metodo SINGLE RESULT
+		private void executarWebServiceSingleResult(String link) {
+			String result = null;
+
+			result = getRESTFileContent(link);
+			
+			if (result == null) {
+				// Nenhum resultado encontrado
+			} else {
+
+				try {
+					Log.d("verificando", "Result: " + result);
+
+					result = result.substring(11, result.length() - 1);
+
+					Log.d("verificando", "Result: " + result);
+
+					JSONObject o = new JSONObject(result);
+
+					veiculo = new Veiculo();
+
+					veiculo.set_id(o.getInt("id"));
+					veiculo.setDescricao(o.getString("descricao"));
+					veiculo.setImei(o.getString("imei"));
+					arrayDadosVeiculos.add(veiculo);
+
+				} catch (JSONException e) {
+					Log.e("Erro", "Erro no parsing do JSON", e);
+				}
+			}
+		}
+
 	}
 
 	// xxxxxxxxxxxxxxxxx FINALIZANDO CONSULTA ( VEICULOS POR LINHA )WEB SERVICE
@@ -602,11 +630,8 @@ public class MapaActivity extends Activity implements LocationListener {
 			result = getRESTFileContent(ConexaoServidor.getConexaoServidor()
 					.getLinkUltimaPosicaoImei() + veiculo.getImei());
 
-			if (result == null) {
-				Log.e("Veiculos", "Falha ao acessar WS");
-				Toast.makeText(getApplicationContext(),
-						"Veiculo Falha ao acessar WS", Toast.LENGTH_SHORT)
-						.show();
+			if (result.equalsIgnoreCase("null")) {
+				// Result sem resultado
 			} else {
 
 				try {
@@ -631,7 +656,7 @@ public class MapaActivity extends Activity implements LocationListener {
 						latLngTemp = new LatLng(Double.parseDouble(latitude),
 								Double.parseDouble(longitude));
 
-						adicionarMarcador(latLngTemp, "(O) " + veiculo.getDescricao(),
+						adicionarMarcador(latLngTemp, veiculo.getDescricao(),
 								R.drawable.mapa_localizacao_onibus, true, false);
 
 					}

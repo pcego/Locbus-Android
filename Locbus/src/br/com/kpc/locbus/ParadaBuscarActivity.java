@@ -144,27 +144,32 @@ public class ParadaBuscarActivity extends Activity {
 		// Limpar ListView
 		listView.clearTextFilter();
 
-		if (opBuscaSelecionada.equalsIgnoreCase("Todas")) {
+		if (opBuscaSelecionada.equalsIgnoreCase("Todas")
+				&& ConexaoServidor.verificaConexao(getApplicationContext())) {
 			// Chama o WebService em um AsyncTask para Todas as Paradas
 			// Passando link do WebService
+			// Valida se tem conexão com a internet
 			new BuscarParadasWS().execute(ConexaoServidor.getConexaoServidor()
 					.getLinkParadasTodas());
 
 		} else if (opBuscaSelecionada.equalsIgnoreCase("Bairro")
-				&& validarCampoPesquisa()) {
+				&& validarCampoPesquisa()
+				&& ConexaoServidor.verificaConexao(getApplicationContext())) {
 			// Chama o WebService em um AsyncTask para Paradas de acordo com
-			// o
-			// Bairro digitado
+			// o Bairro digitado
 			// Passando link do WebService
+			// Valida se tem conexão com a internet
+			// Valida se tem mais de 3 caracteres
 			new BuscarParadasWS().execute(ConexaoServidor.getConexaoServidor()
 					.getLinkParadasPorBairro() + DescricaoPesquisa.getText());
 		} else if (opBuscaSelecionada.equalsIgnoreCase("Rua")
-				&& validarCampoPesquisa()) {
+				&& validarCampoPesquisa()
+				&& ConexaoServidor.verificaConexao(getApplicationContext())) {
 			// Chama o WebService em um AsyncTask para Paradas de acordo com
-			// a
-			// Rua digitado
+			// a Rua digitado
 			// Passando link do WebService
-
+			// Valida se tem conexão com a internet
+			// Valida se tem mais de 3 caracteres
 			new BuscarParadasWS().execute(ConexaoServidor.getConexaoServidor()
 					.getLinkParadasPorRua() + DescricaoPesquisa.getText());
 
@@ -304,13 +309,17 @@ public class ParadaBuscarActivity extends Activity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 			// Se arrayDadosLinha ainda estiver em BRANCO,
 			// e porque não encontrou varios resultado para o array.
 			// Então faz a busca para apenas um Registro.
 			if (arrayDados.isEmpty()) {
+				try {
+					executarWebServiceSingleResult(params[0]);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-				executarWebServiceSingleResult(params[0]);
 			}
 
 			return null;
@@ -323,54 +332,50 @@ public class ParadaBuscarActivity extends Activity {
 
 			result = getRESTFileContent(link);
 
-			if (result == null) {
-				Log.e("Paradas", "Falha ao acessar WS");
-				Toast.makeText(getApplicationContext(),
-						"Paradas Falha ao acessar WS", Toast.LENGTH_SHORT)
-						.show();
-			}
+			if (result.equalsIgnoreCase("null")) {
+				//Nenhum resultado encontrado.
+			} else {
 
-			JSONObject json = new JSONObject(result);
+				JSONObject json = new JSONObject(result);
 
-			JSONArray dadosArray = json.getJSONArray("parada");
-			JSONObject dadosJson;
+				JSONArray dadosArray = json.getJSONArray("parada");
+				JSONObject dadosJson;
 
-			for (int i = 0; i < dadosArray.length(); i++) {
-				dadosJson = new JSONObject(dadosArray.getString(i));
+				for (int i = 0; i < dadosArray.length(); i++) {
+					dadosJson = new JSONObject(dadosArray.getString(i));
 
-				parada = new Parada();
+					parada = new Parada();
 
-				parada.set_id(dadosJson.getInt("id"));
-				parada.setDescricao(dadosJson.getString("descricao"));
-				parada.setLatitude(dadosJson.getString("latitude"));
-				parada.setLongitude(dadosJson.getString("longitude"));
-				parada.setBairro(dadosJson.getString("bairro"));
-				parada.setRua(dadosJson.getString("rua"));
+					parada.set_id(dadosJson.getInt("id"));
+					parada.setDescricao(dadosJson.getString("descricao"));
+					parada.setLatitude(dadosJson.getString("latitude"));
+					parada.setLongitude(dadosJson.getString("longitude"));
+					parada.setBairro(dadosJson.getString("bairro"));
+					parada.setRua(dadosJson.getString("rua"));
 
-				arrayDados.add(parada);
+					arrayDados.add(parada);
+				}
 			}
 		}
-		
+
 		// Executando o webservice para buscar informações no banco de dados.
 		// Metodo SINGLE RESULT
-		private void executarWebServiceSingleResult(String link) {
+		private void executarWebServiceSingleResult(String link)
+				throws JSONException {
 			String result = null;
 
 			result = getRESTFileContent(link);
 
-			if (result == null) {
-				Toast.makeText(getApplicationContext(),
-						"Linha Falha ao acessar WS", Toast.LENGTH_SHORT).show();
-			}
+			if (result.equalsIgnoreCase("null")) {
+				// verificando se tem algum registro no retorno.
+			} else {
 
-			try {
-
-				//Corta o link transformando em Json de um Objeto
-				// Remove a parte {"parada":[  e o final }
+				// Corta o link transformando em Json de um Objeto
+				// Remove a parte {"parada":[ e o final }
 				result = result.substring(10, result.length() - 1);
 
 				JSONObject o = new JSONObject(result);
-				
+
 				parada = new Parada();
 
 				parada.set_id(o.getInt("id"));
@@ -382,11 +387,8 @@ public class ParadaBuscarActivity extends Activity {
 
 				arrayDados.add(parada);
 
-			} catch (JSONException e) {
-				Log.e("Erro", "Erro no parsing do JSON", e);
 			}
 		}
-
 
 		@Override
 		protected void onPostExecute(String result) {
@@ -402,12 +404,10 @@ public class ParadaBuscarActivity extends Activity {
 						R.string.informacoes_carregada_com_sucesso,
 						Toast.LENGTH_SHORT).show();
 
+				// Enviando os dados para o ListView (Atualizando a tela)
+				listView.setAdapter(new ParadaAdapter(
+						ParadaBuscarActivity.this, arrayDados));
 			}
-
-			// Enviando os dados para o ListView (Atualizando a tela)
-			listView.setAdapter(new ParadaAdapter(ParadaBuscarActivity.this,
-					arrayDados));
-
 		}
 	}
 
