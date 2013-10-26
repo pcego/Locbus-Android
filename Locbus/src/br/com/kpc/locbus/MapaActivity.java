@@ -123,9 +123,20 @@ public class MapaActivity extends Activity implements LocationListener {
 						"(P" + bundle.getString("idParada") + ") "
 								+ bundle.getString("DescricaoParada"),
 						R.drawable.mapa_localizacao_parada, true, false);
-			} else if (bundle.getString("numeroLinha") != null) {
-				new VeiculosPorLinhaWS().execute(bundle
-						.getString("numeroLinha"));
+
+			} // Ao clicar na tela principal em "Onibus" digite o numero da
+				// linha o sistema vai chamar essa opção para buscar todos os
+				// ônibus disponiveis para a determinada linha que vai vim na
+				// variavel (numeroLinha)
+			else if (bundle.getString("numeroLinha") != null) {
+
+				// Verificar se tem conexão com internet antes de chamar o WS
+				if (ConexaoServidor.verificaConexao(getApplicationContext())) {
+					// Chama o WS para buscar os veiculos com sua ultima
+					// localização
+					new VeiculosPorLinhaWS().execute(bundle
+							.getString("numeroLinha"));
+				}
 
 			}
 
@@ -277,7 +288,9 @@ public class MapaActivity extends Activity implements LocationListener {
 		// Retorno da opção do menu = 0
 		if (codigo == RETORNO_MENU) {
 			// 1 - Onibus de determinada linha;
-			if (resultado == 1) {
+			// Verificando se tem conexão com a internet
+			if (resultado == 1
+					&& ConexaoServidor.verificaConexao(getApplicationContext())) {
 				String msg = "";
 				msg = itRetorno.getStringExtra("numeroLinha");
 				new VeiculosPorLinhaWS().execute(msg);
@@ -289,9 +302,13 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	public void exibirTodasAsParadas(View v) {
 
-		// Parada de Onibus mais proxima;
+		// Exibir todas as paradas ativas
 		// Chama o WebService em um AsyncTask
-		new TodasAsParadasWS().execute();
+		// Verificar se tem conexão com internet
+		if (ConexaoServidor.verificaConexao(getApplicationContext())) {
+			new TodasAsParadasWS().execute();
+
+		}
 
 	}
 
@@ -379,13 +396,15 @@ public class MapaActivity extends Activity implements LocationListener {
 		@Override
 		protected String doInBackground(Void... params) {
 			// Passando link como parametro. getLink da class ConexãoServidor
-			return executarWebServiceParada(ConexaoServidor
-					.getConexaoServidor().getLinkParadasTodas());
+			executarWebServiceParada(ConexaoServidor.getConexaoServidor()
+					.getLinkParadasTodas());
+			return null;
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
+
 			if (arrayDadosParada.isEmpty()) {
 				Toast.makeText(MapaActivity.this,
 						R.string.nenhum_registro_encontrado, Toast.LENGTH_SHORT)
@@ -394,77 +413,54 @@ public class MapaActivity extends Activity implements LocationListener {
 				Toast.makeText(MapaActivity.this,
 						R.string.informacoes_carregada_com_sucesso,
 						Toast.LENGTH_SHORT).show();
-			}
 
+				Iterator<Parada> it = arrayDadosParada.iterator();
+				while (it.hasNext()) {
+					Parada p = it.next();
+
+					adicionarMarcador(
+							new LatLng(Double.parseDouble(p.getLatitude()),
+									Double.parseDouble(p.getLongitude())),
+							"(P) " + p.getDescricao(),
+							R.drawable.mapa_localizacao_parada, true, false);
+
+				}
+			}
 			progressDialog.dismiss();
-
-			Iterator<Parada> it = arrayDadosParada.iterator();
-			while (it.hasNext()) {
-				Parada p = it.next();
-
-				adicionarMarcador(
-						new LatLng(Double.parseDouble(p.getLatitude()),
-								Double.parseDouble(p.getLongitude())), "(P) "
-								+ p.getDescricao(),
-						R.drawable.mapa_localizacao_parada, true, false);
-
-			}
 
 		}
 
 		// Executando o webservice para buscar informações no banco de dados.
-		private String executarWebServiceParada(String linkOnibus) {
+		private void executarWebServiceParada(String linkOnibus) {
 			String result = null;
 
 			result = getRESTFileContent(linkOnibus);
 
 			if (result.equals("null")) {
 				// Nenhum resultado encontrado
-				return null;
 			} else {
 
 				try {
 					JSONObject json = new JSONObject(result);
-					StringBuffer sb = new StringBuffer();
 					JSONArray dadosArray = json.getJSONArray("parada");
 					JSONObject dadosJson;
 
-					// Se tem apenas um registro no banco
-					if (dadosArray.length() == 1) {
-						// for (int i = 0; i < pessoasArray.length(); i++) {
-						// pessoaJson = new
-						// JSONObject(pessoasArray.getString(i));
-						// sb.append("id=" + json.getLong("id"));
-						// sb.append("|descricao=" +
-						// json.getString("descricao"));
-						// sb.append('\n');
-						// Log.d("TesteWs", sb.toString());
+					for (int i = 0; i < dadosArray.length(); i++) {
+						dadosJson = new JSONObject(dadosArray.getString(i));
+
+						parada = new Parada();
+						parada.set_id(dadosJson.getInt("id"));
+						parada.setDescricao(dadosJson.getString("descricao"));
+						parada.setLatitude(dadosJson.getString("latitude"));
+						parada.setLongitude(dadosJson.getString("longitude"));
+
+						arrayDadosParada.add(parada);
 					}
-					// se tem mais de um registro no banco cria um array
-					else if (dadosArray.length() > 1) {
-
-						for (int i = 0; i < dadosArray.length(); i++) {
-							dadosJson = new JSONObject(dadosArray.getString(i));
-
-							parada = new Parada();
-							parada.set_id(dadosJson.getInt("id"));
-							parada.setDescricao(dadosJson
-									.getString("descricao"));
-							parada.setLatitude(dadosJson.getString("latitude"));
-							parada.setLongitude(dadosJson
-									.getString("longitude"));
-
-							arrayDadosParada.add(parada);
-
-						}
-					}
-					return sb.toString();
 
 				} catch (JSONException e) {
 					Log.e("Erro", "Erro no parsing do JSON", e);
 				}
 			}
-			return null;
 		}
 	}
 
@@ -549,10 +545,6 @@ public class MapaActivity extends Activity implements LocationListener {
 				JSONArray arrayJsonVeiculo = json.getJSONArray("veiculo");
 				JSONObject objetoJsonVeiculo;
 
-				// se tem mais de um registro no banco cria um array
-
-				arrayDadosVeiculos.clear();
-
 				for (int i = 0; i < arrayJsonVeiculo.length(); i++) {
 					objetoJsonVeiculo = new JSONObject(
 							arrayJsonVeiculo.getString(i));
@@ -577,7 +569,7 @@ public class MapaActivity extends Activity implements LocationListener {
 			String result = null;
 
 			result = getRESTFileContent(link);
-			
+
 			if (result == null) {
 				// Nenhum resultado encontrado
 			} else {

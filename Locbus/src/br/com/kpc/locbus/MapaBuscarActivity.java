@@ -54,7 +54,14 @@ public class MapaBuscarActivity extends Activity {
 		lvLinhas = (ListView) findViewById(R.id.lvLinhas);
 
 		// Chama o WebService em um AsyncTask
-		new TodasAsLinhasWS().execute();
+		// Verificar se tem internet
+		if (ConexaoServidor.verificaConexao(getApplicationContext())) {
+			new TodasAsLinhasWS().execute();
+		} else {
+			// se não tem internet finaliza a activity de busca voltando para a
+			// tela do mapa
+			finish();
+		}
 
 		// Quando selecionar algum item da lista fazer...
 		lvLinhas.setOnItemClickListener(new OnItemClickListener() {
@@ -150,8 +157,8 @@ public class MapaBuscarActivity extends Activity {
 			// e porque não encontrou varios resultado para o array.
 			// Então faz a busca para apenas um Registro.
 			if (arrayDados.isEmpty()) {
-				executarWebServiceSingleResult(ConexaoServidor.getConexaoServidor()
-						.getLinkTodaslinhas());
+				executarWebServiceSingleResult(ConexaoServidor
+						.getConexaoServidor().getLinkTodaslinhas());
 			}
 
 			return null;
@@ -164,13 +171,10 @@ public class MapaBuscarActivity extends Activity {
 			result = getRESTFileContent(linkOnibus);
 
 			if (result == null) {
-				Log.e("Onibus", "Falha ao acessar WS");
-				Toast.makeText(getApplicationContext(),
-						"Onibus Falha ao acessar WS", Toast.LENGTH_SHORT)
-						.show();
-			}
+				// sem registros
+			} else {
+
 				JSONObject json = new JSONObject(result);
-				StringBuffer sb = new StringBuffer();
 				JSONArray dadosArray = json.getJSONArray("linha");
 				JSONObject dadosJson;
 
@@ -190,48 +194,43 @@ public class MapaBuscarActivity extends Activity {
 					arrayDados.add(linhas);
 
 				}
+			}
 		}
-		
+
 		// Executando o webservice para buscar informações no banco de dados.
 		// Metodo SINGLE RESULT
 		private void executarWebServiceSingleResult(String link) {
 			String result = null;
-		
+
 			result = getRESTFileContent(link);
 
 			if (result == null) {
-				Log.e("Linha", "Falha ao acessar WS");
-				Toast.makeText(getApplicationContext(),
-						"Linha Falha ao acessar WS", Toast.LENGTH_SHORT).show();
+				// sem registros
+			} else {
+
+				try {
+					result = result.substring(9, result.length() - 1);
+
+					JSONObject o = new JSONObject(result);
+
+					linhas = new Linha();
+
+					linhas.set_id(o.getInt("id"));
+					linhas.setHoraFinal(o.getString("horaFinal"));
+					linhas.setHoraInicial(o.getString("horaInicial"));
+					linhas.setNumeroLinha(o.getInt("numeroLinha"));
+					linhas.setPontoFinal(o.getString("pontoFinal"));
+					linhas.setPontoInicial(o.getString("pontoInicial"));
+					linhas.setStatus(o.getBoolean("status"));
+					linhas.setTipoLinha(o.getString("tipoLinha"));
+					arrayDados.add(linhas);
+
+				} catch (JSONException e) {
+					Log.e("Erro", "Erro no parsing do JSON", e);
+				}
 			}
 
-			try {
-				Log.d("verificando", "Result: " + result);
-
-				
-				result = result.substring(9, result.length() - 1);
-
-				Log.d("verificando", "Result: " + result);
-
-				JSONObject o = new JSONObject(result);
-
-				linhas = new Linha();
-
-				linhas.set_id(o.getInt("id"));
-				linhas.setHoraFinal(o.getString("horaFinal"));
-				linhas.setHoraInicial(o.getString("horaInicial"));
-				linhas.setNumeroLinha(o.getInt("numeroLinha"));
-				linhas.setPontoFinal(o.getString("pontoFinal"));
-				linhas.setPontoInicial(o.getString("pontoInicial"));
-				linhas.setStatus(o.getBoolean("status"));
-				linhas.setTipoLinha(o.getString("tipoLinha"));
-				arrayDados.add(linhas);
-
-			} catch (JSONException e) {
-				Log.e("Erro", "Erro no parsing do JSON", e);
-			}
 		}
-
 
 		@Override
 		protected void onPostExecute(String result) {
