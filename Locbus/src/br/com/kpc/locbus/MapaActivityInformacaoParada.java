@@ -150,7 +150,7 @@ public class MapaActivityInformacaoParada extends Activity {
 
 			result = getRESTFileContent(link);
 
-			if (result == null) {
+			if (result.equals("null")) {
 				Log.e("Linha", "Falha ao acessar WS");
 				Toast.makeText(getApplicationContext(),
 						"Linha Falha ao acessar WS", Toast.LENGTH_SHORT).show();
@@ -186,7 +186,7 @@ public class MapaActivityInformacaoParada extends Activity {
 
 			result = getRESTFileContent(link);
 
-			if (result == null) {
+			if (result.equals("null")) {
 				// Nenhum resultado encontrado
 			} else {
 

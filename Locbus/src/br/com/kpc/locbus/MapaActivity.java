@@ -51,7 +51,7 @@ public class MapaActivity extends Activity implements LocationListener {
 
 	private static final int RETORNO_MENU = 0;
 
-	ListView listView;
+	private ListView listView;
 	// Array que vai armazenar os dados da consulta e coloca no List
 	private ArrayList<Parada> arrayDadosParada = new ArrayList<Parada>();
 
@@ -119,8 +119,7 @@ public class MapaActivity extends Activity implements LocationListener {
 						new LatLng(Double.parseDouble(bundle
 								.getString("LatitudeParada")),
 								Double.parseDouble(bundle
-										.getString("longitudeParada"))),
-						"(P" + bundle.getString("idParada") + ") "
+										.getString("longitudeParada"))), "(P) "
 								+ bundle.getString("DescricaoParada"),
 						R.drawable.mapa_localizacao_parada, true, false);
 
@@ -132,6 +131,9 @@ public class MapaActivity extends Activity implements LocationListener {
 
 				// Verificar se tem conexão com internet antes de chamar o WS
 				if (ConexaoServidor.verificaConexao(getApplicationContext())) {
+					// Chamando o Garbage collector
+					// estava dando erro de memoria.
+					System.gc();
 					// Chama o WS para buscar os veiculos com sua ultima
 					// localização
 					new VeiculosPorLinhaWS().execute(bundle
@@ -488,6 +490,7 @@ public class MapaActivity extends Activity implements LocationListener {
 			String imei = params[0];
 			// Passando link como parametro. getLink da class ConexãoServidor
 			try {
+
 				executarWebServiceVeiculoPorLinha(ConexaoServidor
 						.getConexaoServidor().getLinkVeiculosPorLinha() + imei);
 			} catch (JSONException e) {
@@ -498,18 +501,18 @@ public class MapaActivity extends Activity implements LocationListener {
 			// Se arrayDadosLinha ainda estiver em BRANCO,
 			// e porque não encontrou varios resultado para o array.
 			// Então faz a busca para apenas um Registro.
-			if (arrayDadosVeiculos.isEmpty()) {
 
+			if (arrayDadosVeiculos.isEmpty()) {
 				executarWebServiceSingleResult(ConexaoServidor
 						.getConexaoServidor().getLinkVeiculosPorLinha() + imei);
 			}
+
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			progressDialog.dismiss();
 
 			if (arrayDadosVeiculos.isEmpty()) {
 				Toast.makeText(MapaActivity.this,
@@ -525,7 +528,7 @@ public class MapaActivity extends Activity implements LocationListener {
 				thread.start();
 
 			}
-
+			progressDialog.dismiss();
 		}
 
 		// Executando o webservice para buscar informações no banco de dados.
@@ -570,16 +573,14 @@ public class MapaActivity extends Activity implements LocationListener {
 
 			result = getRESTFileContent(link);
 
-			if (result == null) {
+			if (result.equals("null")) {
 				// Nenhum resultado encontrado
+
 			} else {
 
 				try {
-					Log.d("verificando", "Result: " + result);
 
 					result = result.substring(11, result.length() - 1);
-
-					Log.d("verificando", "Result: " + result);
 
 					JSONObject o = new JSONObject(result);
 
