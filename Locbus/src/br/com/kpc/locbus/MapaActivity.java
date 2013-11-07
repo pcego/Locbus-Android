@@ -131,9 +131,6 @@ public class MapaActivity extends Activity implements LocationListener {
 
 				// Verificar se tem conexão com internet antes de chamar o WS
 				if (ConexaoServidor.verificaConexao(getApplicationContext())) {
-					// Chamando o Garbage collector
-					// estava dando erro de memoria.
-					System.gc();
 					// Chama o WS para buscar os veiculos com sua ultima
 					// localização
 					new VeiculosPorLinhaWS().execute(bundle
