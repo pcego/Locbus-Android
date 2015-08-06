@@ -1,0 +1,76 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MapaActivity" >
+
+    <fragment
+        android:id="@+id/mapa"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.google.android.gms.maps.MapFragment" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_list_selector"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:background="#80000000"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="4dp" >
+
+        <Button
+            android:background="@drawable/mapa_menu_1"
+            android:gravity="center_horizontal|center_vertical"
+            android:onClick="onClick_MeuLocal"
+            android:textColor="@color/Verde" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:background="#aaa" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mapa_menu_satelite"
+            android:gravity="center_horizontal|center_vertical"
+            android:onClick="onClick_Satelite"
+            android:textColor="@color/Preto" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:background="#aaa" />
+
+        <ImageButton
+            android:id="@+id/radioCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mapa_menu_onibus"
+            android:gravity="center_horizontal|center_vertical"
+            android:onClick="onClick_MapaConsultarLinha"
+            android:textColor="@color/Azul" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:background="#aaa" />
+
+        <Button
+            android:id="@+id/radioNearBy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mapa_menu_parada"
+            android:gravity="center_horizontal|center_vertical"
+            android:onClick="exibirTodasAsParadas"
+            android:textColor="@color/Vermelho" />
+    </RadioGroup>
+
+</FrameLayout><!-- From: file:/C:/Locbus-Android/AndroidStudio/app/src/main/res/layout/mapa.xml -->

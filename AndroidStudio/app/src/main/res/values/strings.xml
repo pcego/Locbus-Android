@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="titulo_carregando_webservice">Aguarde</string>
+    <string name="texto_carregando_webservice">processando..</string>
+    <string name="nao_existencia_internet">Atenção!!! não existência conexão com a internet.</string>
+    <string name="informacoes_carregada_com_sucesso">Informações carregada com sucesso!</string>
+    <string name="nenhum_registro_encontrado">Nenhum registro encontrado!</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="voltar">Voltar</string>
+    <string name="app_name">BusMoc</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- Layout Principal -->
+    <string name="menu_onibus">Ônibus</string>
+    <string name="menu_mapa">Mapa</string>
+    <string name="menu_paradas">Paradas</string>
+    <string name="title_activity_onibus">Ônibus</string>
+
+    <!-- Layout Mapa -->
+
+    <string name="alerta_gps_desativado_titulo">ATENÇÃO o GPS esta Desligado.?</string>
+    <string name="alerta_gps_desativado_pergunta">Desejá ativar o GPS?</string>
+    <string name="alerta_gps_desativado_mensagem_nao_ativou_gps">Com o GPS desligado o aplicativo não vai funcionar perfeitamente.</string>
+    <string name="meu_local">Meu Local</string>
+    <string name="alerta_usuario_desativou_gps">O GPS esta desativado.</string>
+
+    <!-- Layout Ônibus -->
+    <string name="btn_buscar">Ok</string>
+    <string name="title_activity_onibus_infor_activyty">Informações sobre o Ônibus</string>
+    <string name="title_activity_mapa">Mapa</string>
+    <string name="title_activity_mapa_buscar">Selecione uma linha:</string>
+    <string name="consulta_de_onibus_por_linha">Consulta de ônibus por linha:</string>
+    <string name="hint_numero_da_linha">Numero da Linha</string>
+
+    <!-- Layout Mapa Contulta Linha -->
+    <string name="title_activity_mapa_consultar_linha">Consulta de Veículos por Linha</string>
+    <string name="numero_da_linha">Numero da Linha</string>
+
+    <!-- Layout Parada Linha -->
+    <string name="title_activity_parada_buscar">Buscar Paradas</string>
+    <string name="selecione_uma_parada">Selecione</string>
+    <string name="hint_informe_o_endereco">Informe o endereço</string>
+    <string name="title_activity_parada_informacao">Informações da Parada</string>
+
+    <string-array name="opcao_de_busca_paradas">
+        <item>Todas</item>
+        <item>Rua</item>
+        <item>Bairro</item>
+    </string-array>
+
+    <!-- Layout Buscar Paradas -->
+    <string name="limite_minimo_de_caracteres">Precisamos que você digite no mínimo 3 caracteres.</string>
+    <string name="title_activity_mapa_activity_informacao">Informações</string>
+
+</resources>

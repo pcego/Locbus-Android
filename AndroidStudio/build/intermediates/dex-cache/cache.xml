@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="d84409890828e07d344a3b9b1da545dba9897b51">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-8d080f8e2654c893528e5a437aebd92233a8e913.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\22.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="a1372c17fccacca753d3951d3ad820571cbce075">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-801b7db3a7f710f17166ff4cbcb00a69b73d0971.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="a78183f30e769a98ab4820794f597763088d3065">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-fe7ddc8a6a957e44d0170c2a5469ce391d80f2e7.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="e7b35244f50663b3f8d150714bca9ecd7a290da1">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-1ac9fb56b8e54a885a5411da22e95119bfc6a104.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="1e98ef3f124bb7a11f8575f9ff5dfea330b61b6f">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-8d292cb8f4799b026b5d2c96cafdd7e8eba2897a.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="6836d188602ec5382d1967c58b00960eb8ff8773">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-a1f50917624150f7bde1333e7c8bc1cfdf882b2c.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-440878b56f58926ad3242da2d17566b3decbb223.jar" />
+    </item>
+    <item
+        jar="D:\Android\android sdk\extras\android\m2repository\com\android\support\support-annotations\22.0.0\support-annotations-22.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\support-annotations-22.0.0-2e3f3274bac497f5c32ac5ea031010e07e0eb4fa.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="ba207be21987c11b37d9f8faa08ed6e722569f30">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-588f467882c252b957f675df2fe467ba2f1644c1.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="a172852a35ff919e85b9b7f14bbc15c5bee25520">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-fae108741d5104e7631a49662732dfb0771d89f1.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="d405025c600055237c171a0bbabaa49d69696573">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-e34391d7916ccfce4436c2dc888b2f83a2c77039.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="1a6411087ab88ce5542f593e63a2752b6b0d6f1a">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-3b193a563625a2cbebf5e5ca5d9969c522c2ab6e.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="6440e5e5cfe368f9bff3c537fb8988048069cb33">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-7a152fca27d2b661de92010080ebb0f8abe2be71.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="69dd177337ead693c408c8dddc9546bb6f1244fa">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-8ebc9b2268ca3810789ee230e5a0329f948e3220.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appstate\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="68c140702c7242d914655bcb3164d9e8c45b84cb">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-fa82a4ad6ab72e432344247f777e5a5b870cc358.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="06a42becc33232ec0ee125161da68c1829c9f8fd">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-a70147ee3d8fe942216b7e136cebb970ad106407.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-plus\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="272bc5d7063f24bc3a33ea1d318cde8f31f5ec4c">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-6c50967fd97403150ea7eca3f9c5da98f7fd8d9a.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="02bac2dc792d78241077861566f2c82da955e7fa">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-406ac2a51a6fd7350e48fd319887eaacaea459f8.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="8e3a972f28b8bae817e382257ba177a31bcadbbc">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-08fa19cf08ad377b1191274c3e0a1bb0d8e007d3.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.0.0\jars\libs\internal_impl-22.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\internal_impl-22.0.0-1f0f0e561264238b5822507266d84c6cd573686e.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="f44d03c138cb6488fdbaa65e3a7e5878861a56d8">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-97ee7632bf320590567726a11fad92809f3b899c.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="8d736fefa22d896e84a268354b3ed48a42663150">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-520ee341f4f9294b7b35d893d0822bad802fb8f8.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="f02127a85abd52a2cd526d4c2409f21969f80ee8">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-1b65b7c171b90666b113816336ed80bab3c53bd2.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appinvite\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="63ec6e9f4fe5482a7447d0f3091b8e543a02554c">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-392728b09a41d26435a9f80cf7c17dbaad343c30.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\7.5.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="29ebc7e04d877062317c8cc0e68b20f0c1fcda66">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\classes-b415bf939cebefce7878b82790a0330bb231e389.jar" />
+    </item>
+    <item
+        jar="C:\Locbus-Android\AndroidStudio\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\22.0.0\jars\libs\internal_impl-22.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="ba3df4eb0a630d7de294f0e48d3f9267d279b784">
+        <dex dex="C:\Locbus-Android\AndroidStudio\app\build\intermediates\pre-dexed\debug\internal_impl-22.0.0-20d272cec70183c0f9d7f8aefb34d49a78241b87.jar" />
+    </item>
+
+</items>
